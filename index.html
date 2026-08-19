@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Mastering Client</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        h2 { color: #fff; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            background: #1e1e1e;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #e50914;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+        button:hover { background-color: #b20710; }
+        button:disabled { background-color: #555; cursor: not-allowed; }
+        #status-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1a1a1a;
+            border-left: 4px solid #e50914;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <h2>🐱 Web Mastering Client</h2>
+    
+    <div class="form-group">
+        <label for="api-token">API Token de Bakuage:</label>
+        <input type="text" id="api-token" placeholder="Pega tu token aquí...">
+    </div>
+
+    <div class="form-group">
+        <label for="audio-file">Seleccionar archivo de audio (WAV / FLAC / MP3):</label>
+        <input type="file" id="audio-file" accept="audio/*">
+    </div>
+
+    <button id="process-btn" onclick="initMastering()">Iniciar Mastering</button>
+
+    <div id="status-box" class="hidden">Esperando acción...</div>
+
+    <script>
+        const API_BASE = "https://api.bakuage.com/api/v1";
+
+        function logMessage(msg) {
+            const box = document.getElementById("status-box");
+            box.classList.remove("hidden");
+            box.innerText += "\n> " + msg;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        async function initMastering() {
+            const token = document.getElementById("api-token").value.trim();
+            const fileInput = document.getElementById("audio-file");
+            const btn = document.getElementById("process-btn");
+
+            if (!token) {
+                alert("Por favor, introduce tu API Token.");
+                return;
+            }
+            if (fileInput.files.length === 0) {
+                alert("Por favor, selecciona un archivo de audio.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            btn.disabled = true;
+            document.getElementById("status-box").innerText = "Iniciando proceso...";
+
+            try {
+                // 1. Crear la tarea de mastering en la API
+                logMessage("Creando tarea en el servidor...");
+                const createRes = await fetch(`${API_BASE}/masterings`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!createRes.ok) throw new Error("Error al inicializar la tarea (verifica tu token).");
+                const createData = await createRes.json();
+                const masteringId = createData.id;
+                const uploadUrl = createData.upload_url;
+
+                logMessage(`Tarea creada con ID: ${masteringId}`);
+
+                // 2. Subir el archivo binario a la URL temporal proporcionada
+                logMessage(`Subiendo archivo (${file.name})... Esto puede tardar según tu conexión.`);
+                const uploadRes = await fetch(uploadUrl, {
+                    method: 'PUT',
+                    body: file
+                });
+
+                if (!uploadRes.ok) throw new Error("Fallo al subir el archivo de audio.");
+                logMessage("Archivo subido correctamente.");
+
+                // 3. Notificar que la subida ha terminado para que comience el procesamiento
+                logMessage("Notificando inicio de procesamiento...");
+                const patchRes = await fetch(`${API_BASE}/masterings/${masteringId}`, {
+                    method: 'PATCH',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: 'uploaded' })
+                });
+
+                if (!patchRes.ok) throw new Error("No se pudo activar el procesamiento.");
+
+                // 4. Hacer Polling para revisar el estado del mastering
+                logMessage("Procesando en servidores de Bakuage...");
+                pollMasteringStatus(token, masteringId);
+
+            } catch (error) {
+                logMessage(`❌ Error: ${error.message}`);
+                btn.disabled = false;
+            }
+        }
+
+        function pollMasteringStatus(token, masteringId) {
+            const interval = setInterval(async () => {
+                try {
+                    const res = await fetch(`${API_BASE}/masterings/${masteringId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+
+                    logMessage(`Estado actual: ${data.status}`);
+
+                    if (data.status === 'finished') {
+                        clearInterval(interval);
+                        logMessage("✅ ¡Mastering completado con éxito!");
+                        
+                        // Crear enlace de descarga dinámico
+                        if (data.download_url) {
+                            logMessage(`📥 <a href="${data.download_url}" target="_blank" style="color: #ff5555;">Haz clic aquí para descargar tu archivo masterizado</a>`);
+                        }
+                        document.getElementById("process-btn").disabled = false;
+                    } else if (data.status === 'failed' || data.status === 'error') {
+                        clearInterval(interval);
+                        logMessage("❌ El proceso de mastering falló en el servidor.");
+                        document.getElementById("process-btn").disabled = false;
+                    }
+                } catch (e) {
+                    clearInterval(interval);
+                    logMessage(`❌ Error consultando el estado: ${e.message}`);
+                    document.getElementById("process-btn").disabled = false;
+                }
+            }, 5000); // Revisa el estado cada 5 segundos
+        }
+    </script>
+</body>
+</html>
