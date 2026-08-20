@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --surface: rgba(255, 255, 255, 0.82);
-            --surface-card: rgba(241, 245, 249, 0.7);
+            --surface: rgba(255, 255, 255, 0.85);
+            --surface-card: rgba(241, 245, 249, 0.75);
             --border-subtle: #cbd5e1;
             --text-main: #0f172a;
             --text-muted: #475569;
@@ -114,6 +114,91 @@
             gap: 20px;
         }
 
+        /* Estilos de la Vista de Bienvenida */
+        .welcome-view {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .welcome-hero {
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            padding: 20px;
+            border-radius: 14px;
+            text-align: center;
+        }
+
+        .welcome-hero h2 {
+            margin: 0 0 8px 0;
+            font-size: 1.4rem;
+            color: var(--text-main);
+        }
+
+        .welcome-hero p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .credits-box {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(2, 132, 199, 0.05);
+            border: 1px solid rgba(2, 132, 199, 0.15);
+            padding: 12px 16px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .credits-box a {
+            color: var(--accent-primary);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .credits-box a:hover {
+            text-decoration: underline;
+        }
+
+        .tutorial-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tutorial-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .tutorial-number {
+            background: var(--accent-primary);
+            color: white;
+            font-weight: 800;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+
+        .tutorial-step span strong {
+            color: var(--text-main);
+        }
+
+        /* Utilidades generales */
         .section-title {
             font-size: 0.9rem;
             font-weight: 700;
@@ -138,20 +223,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-        }
-
-        .token-action-btn {
-            background: none;
-            border: none;
-            color: var(--accent-primary);
-            font-size: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            padding: 0;
-            text-decoration: underline;
-        }
-        .token-action-btn:hover {
-            color: var(--accent-hover);
         }
 
         .input-box, select, textarea {
@@ -293,7 +364,7 @@
             cursor: pointer;
         }
 
-        .btn-master {
+        .btn-action {
             background: var(--accent-primary);
             color: white;
             border: none;
@@ -310,15 +381,30 @@
             box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
         }
 
-        .btn-master:hover {
+        .btn-action:hover {
             background: var(--accent-hover);
         }
 
-        .btn-master:disabled {
+        .btn-action:disabled {
             background: var(--border-subtle);
             color: var(--text-muted);
             cursor: not-allowed;
             box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: var(--surface-card);
+            color: var(--text-main);
+            border: 1px solid var(--border-subtle);
+            padding: 10px 16px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .btn-secondary:hover {
+            background: var(--border-subtle);
         }
 
         #status-console {
@@ -346,6 +432,10 @@
         }
         .download-link:hover { text-decoration: underline; }
 
+        .hidden {
+            display: none !important;
+        }
+
         @media (max-width: 480px) {
             body { padding: 15px 10px; }
             .portal-body { padding: 18px; }
@@ -360,190 +450,251 @@
                 <div class="brand-logo">🐱</div>
                 <div>
                     <h1 class="brand-title">Mastering Pro App</h1>
-                    <p class="brand-subtitle">API Integration</p>
+                    <p class="brand-subtitle">Audio Suite</p>
                 </div>
             </div>
-            <div class="portal-badge">Bakuage</div>
+            <div class="portal-badge">Bakuage Engine</div>
         </header>
 
         <div class="portal-body">
-            <!-- Credenciales y Archivo -->
-            <div class="control-group">
-                <div class="control-label">
-                    <span>API Token de Bakuage</span>
-                    <button type="button" class="token-action-btn" onclick="forgetAndNewToken()">Olvidar / Generar nuevo</button>
+            
+            <!-- VISTA 1: BIENVENIDA Y CONFIGURACIÓN INICIAL -->
+            <div id="view-welcome" class="welcome-view">
+                <div class="welcome-hero">
+                    <h2>¡Bienvenido a Mastering Pro App! 🎧✨</h2>
+                    <p>Tu estación de trabajo independiente definitiva para llevar tus producciones musicales al siguiente nivel con calidad de estudio y precisión quirúrgica.</p>
                 </div>
-                <input type="text" id="api-token" class="input-box" placeholder="Pega tu token de desarrollador aquí...">
-            </div>
 
-            <div class="control-group">
-                <label class="control-label">Archivo de Audio (WAV / FLAC / MP3)</label>
-                <input type="file" id="audio-file" class="input-box" accept=".wav,.flac,.mp3,audio/wav,audio/flac,audio/mpeg">
-            </div>
-
-            <!-- Parámetros de Limiter -->
-            <div class="section-title">Parámetros de Mastering</div>
-
-            <div class="control-group">
-                <label class="control-label">Target Loudness (LUFS)</label>
-                <div class="control-row-slider">
-                    <div class="slider-track-container">
-                        <input type="range" id="target-loudness-range" min="-30" max="0" value="-14" step="0.5" oninput="syncVal('target-loudness', this.value)">
-                    </div>
-                    <div class="stepper-box">
-                        <button class="stepper-btn" onclick="stepVal('target-loudness', -0.5)">-</button>
-                        <input type="number" id="target-loudness-input" class="stepper-input" value="-14" min="-30" max="0" step="0.5" onchange="syncVal('target-loudness', this.value)">
-                        <button class="stepper-btn" onclick="stepVal('target-loudness', 0.5)">+</button>
-                    </div>
+                <div class="credits-box">
+                    Desarrollado de forma independiente y potenciado por la avanzada 
+                    <a href="https://bakuage.com/" target="_blank">API de Bakuage</a>. 
+                    Conoce más sobre sus servicios en <a href="https://bakuage.com/" target="_blank">bakuage.com</a>.
                 </div>
-            </div>
 
-            <div class="control-group">
-                <label class="control-label">True Peak (dBFS)</label>
-                <div class="control-row-slider">
-                    <div class="slider-track-container">
-                        <input type="range" id="true-peak-range" min="-10" max="0" value="-1.0" step="0.1" oninput="syncVal('true-peak', this.value)">
+                <div class="section-title">Mini Tutorial de Uso</div>
+                <div class="tutorial-container">
+                    <div class="tutorial-step">
+                        <div class="tutorial-number">1</div>
+                        <span><strong>Obtén tu token:</strong> Entra a <a href="https://bakuage.com/" target="_blank" style="color:var(--accent-primary); font-weight:700;">Bakuage</a>, inicia sesión en tu cuenta de desarrollador y genera o copia tu API Token.</span>
                     </div>
-                    <div class="stepper-box">
-                        <button class="stepper-btn" onclick="stepVal('true-peak', -0.1)">-</button>
-                        <input type="number" id="true-peak-input" class="stepper-input" value="-1.0" min="-10" max="0" step="0.1" onchange="syncVal('true-peak', this.value)">
-                        <button class="stepper-btn" onclick="stepVal('true-peak', 0.1)">+</button>
+                    <div class="tutorial-step">
+                        <div class="tutorial-number">2</div>
+                        <span><strong>Pégalo aquí:</strong> Ingresa el token en la casilla de abajo. La app lo recordará automáticamente en este navegador para que nunca más tengas que teclearlo.</span>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="tutorial-number">3</div>
+                        <span><strong>Masteriza:</strong> Sube tu archivo de audio, ajusta los parámetros a tu gusto y deja que la inteligencia artificial haga el resto.</span>
                     </div>
                 </div>
-            </div>
 
-            <div class="control-group">
-                <label class="control-label">Ceiling Mode</label>
-                <select id="ceiling-mode" class="input-box">
-                    <option value="true_peak">True Peak</option>
-                    <option value="true_peak_lowpass">True Peak (15kHz Lowpass)</option>
-                    <option value="peak">Peak (Standard)</option>
-                </select>
-            </div>
-
-            <!-- Automatic Mastering -->
-            <div class="section-title" style="margin-top: 10px;">Automatic Mastering</div>
-
-            <label class="checkbox-group">
-                <input type="checkbox" id="auto-mastering-enabled" checked>
-                Automatic Mastering Enabled
-            </label>
-
-            <div class="control-group" style="margin-top: 6px;">
-                <label class="control-label">Mastering Level Intensity</label>
-                <div class="control-row-slider">
-                    <div class="slider-track-container">
-                        <input type="range" id="auto-level-range" min="0" max="5" value="1.0" step="0.1" oninput="syncVal('auto-level', this.value)">
-                    </div>
-                    <div class="stepper-box">
-                        <button class="stepper-btn" onclick="stepVal('auto-level', -0.1)">-</button>
-                        <input type="number" id="auto-level-input" class="stepper-input" value="1.0" min="0" max="5" step="0.1" onchange="syncVal('auto-level', this.value)">
-                        <button class="stepper-btn" onclick="stepVal('auto-level', 0.1)">+</button>
-                    </div>
+                <div class="control-group" style="margin-top: 10px;">
+                    <label class="control-label">API Token de Bakuage (Acceso Personal)</label>
+                    <input type="text" id="setup-token" class="input-box" placeholder="Pega tu token aquí (ej. bkg_sec_...)">
                 </div>
+
+                <button class="btn-action" onclick="saveTokenAndProceed()">
+                    Entrar al Panel de Mastering 🚀
+                </button>
             </div>
 
-            <!-- Filtros de Frecuencia (Cut Freq) -->
-            <div class="section-title" style="margin-top: 10px;">Filtros de Frecuencia (Cut Freq)</div>
-
-            <div class="control-group">
-                <label class="control-label">Low Cut Freq (Hz)</label>
-                <div class="control-row-slider">
-                    <div class="slider-track-container">
-                        <input type="range" id="low-cut-range" min="0" max="200" value="20" step="1" oninput="syncVal('low-cut', this.value)">
-                    </div>
-                    <div class="stepper-box">
-                        <button class="stepper-btn" onclick="stepVal('low-cut', -1)">-</button>
-                        <input type="number" id="low-cut-input" class="stepper-input" value="20" min="0" max="200" onchange="syncVal('low-cut', this.value)">
-                        <button class="stepper-btn" onclick="stepVal('low-cut', 1)">+</button>
-                    </div>
+            <!-- VISTA 2: PANEL DE MASTERING (Opciones estructuradas) -->
+            <div id="view-mastering" class="hidden" style="display: flex; flex-direction: column; gap: 20px;">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--surface-card); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-subtle);">
+                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">🟢 Token configurado correctamente</span>
+                    <button type="button" class="btn-secondary" onclick="resetTokenSettings()">Cambiar / Olvidar Token</button>
                 </div>
-            </div>
 
-            <div class="control-group">
-                <label class="control-label">High Cut Freq (Hz)</label>
-                <div class="control-row-slider">
-                    <div class="slider-track-container">
-                        <input type="range" id="high-cut-range" min="10000" max="24000" value="20000" step="100" oninput="syncVal('high-cut', this.value)">
-                    </div>
-                    <div class="stepper-box">
-                        <button class="stepper-btn" onclick="stepVal('high-cut', -100)">-</button>
-                        <input type="number" id="high-cut-input" class="stepper-input" value="20000" min="10000" max="24000" onchange="syncVal('high-cut', this.value)">
-                        <button class="stepper-btn" onclick="stepVal('high-cut', 100)">+</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Advanced Options -->
-            <div class="section-title" style="margin-top: 10px;">Advanced Options</div>
-
-            <div class="control-group">
-                <label class="control-label">Video Title (multiple lines allowed)</label>
-                <textarea id="video-title" class="input-box" placeholder="Título para video u otros metadatos..."></textarea>
-            </div>
-
-            <label class="checkbox-group" style="align-items: flex-start;">
-                <input type="checkbox" id="preserve-bass" checked style="margin-top: 3px;">
-                <span>Preserve Bass <span style="font-weight: 400; color: var(--text-muted); font-size: 0.8rem;">(Depending On The Sound Source, It May Be Easy To Distort.)</span></span>
-            </label>
-
-            <div class="control-group" style="margin-top: 4px;">
-                <label class="control-label">Mastering Algorithm</label>
-                <div class="algo-tabs" style="display: flex; background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 4px; gap: 4px;">
-                    <button type="button" class="algo-tab" id="tab-v1" onclick="setAlgorithm('v1')" style="flex:1; padding:10px; text-align:center; background:transparent; border:none; border-radius:8px; font-weight:700; font-size:0.85rem; color:var(--text-muted); cursor:pointer;">V1</button>
-                    <button type="button" class="algo-tab active" id="tab-v2" onclick="setAlgorithm('v2')" style="flex:1; padding:10px; text-align:center; background:var(--accent-primary); color:white; border:none; border-radius:8px; font-weight:700; font-size:0.85rem; cursor:pointer;">V2 (Latest)</button>
-                </div>
-                <input type="hidden" id="algorithm" value="v2">
-            </div>
-
-            <!-- Formatos y Calidad de Salida -->
-            <div class="section-title" style="margin-top: 10px;">Formatos y Calidad de Salida</div>
-
-            <div class="grid-2">
                 <div class="control-group">
-                    <label class="control-label">Output Format</label>
-                    <select id="output-format" class="input-box">
-                        <option value="wav_16">WAV (16bit)</option>
-                        <option value="wav_24" selected>WAV (24bit)</option>
-                        <option value="wav_32float">WAV (32bit Float)</option>
-                        <option value="mp3_320">MP3 (320kbps)</option>
+                    <label class="control-label">Archivo de Audio (WAV / FLAC / MP3)</label>
+                    <input type="file" id="audio-file" class="input-box" accept=".wav,.flac,.mp3,audio/wav,audio/flac,audio/mpeg">
+                </div>
+
+                <!-- Parámetros de Limiter -->
+                <div class="section-title">Parámetros de Mastering</div>
+
+                <div class="control-group">
+                    <label class="control-label">Target Loudness (LUFS)</label>
+                    <div class="control-row-slider">
+                        <div class="slider-track-container">
+                            <input type="range" id="target-loudness-range" min="-30" max="0" value="-14" step="0.5" oninput="syncVal('target-loudness', this.value)">
+                        </div>
+                        <div class="stepper-box">
+                            <button class="stepper-btn" onclick="stepVal('target-loudness', -0.5)">-</button>
+                            <input type="number" id="target-loudness-input" class="stepper-input" value="-14" min="-30" max="0" step="0.5" onchange="syncVal('target-loudness', this.value)">
+                            <button class="stepper-btn" onclick="stepVal('target-loudness', 0.5)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">True Peak (dBFS)</label>
+                    <div class="control-row-slider">
+                        <div class="slider-track-container">
+                            <input type="range" id="true-peak-range" min="-10" max="0" value="-1.0" step="0.1" oninput="syncVal('true-peak', this.value)">
+                        </div>
+                        <div class="stepper-box">
+                            <button class="stepper-btn" onclick="stepVal('true-peak', -0.1)">-</button>
+                            <input type="number" id="true-peak-input" class="stepper-input" value="-1.0" min="-10" max="0" step="0.1" onchange="syncVal('true-peak', this.value)">
+                            <button class="stepper-btn" onclick="stepVal('true-peak', 0.1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Ceiling Mode</label>
+                    <select id="ceiling-mode" class="input-box">
+                        <option value="true_peak">True Peak</option>
+                        <option value="true_peak_lowpass">True Peak (15kHz Lowpass)</option>
+                        <option value="peak">Peak (Standard)</option>
                     </select>
                 </div>
-                <div class="control-group">
-                    <label class="control-label">Sampling Rate</label>
-                    <select id="sampling-rate" class="input-box">
-                        <option value="original" selected>Same As Original</option>
-                        <option value="44100">44.1 kHz</option>
-                        <option value="48000">48 kHz</option>
-                    </select>
+
+                <!-- Automatic Mastering -->
+                <div class="section-title" style="margin-top: 10px;">Automatic Mastering</div>
+
+                <label class="checkbox-group">
+                    <input type="checkbox" id="auto-mastering-enabled" checked>
+                    Automatic Mastering Enabled
+                </label>
+
+                <div class="control-group" style="margin-top: 6px;">
+                    <label class="control-label">Mastering Level Intensity</label>
+                    <div class="control-row-slider">
+                        <div class="slider-track-container">
+                            <input type="range" id="auto-level-range" min="0" max="5" value="1.0" step="0.1" oninput="syncVal('auto-level', this.value)">
+                        </div>
+                        <div class="stepper-box">
+                            <button class="stepper-btn" onclick="stepVal('auto-level', -0.1)">-</button>
+                            <input type="number" id="auto-level-input" class="stepper-input" value="1.0" min="0" max="5" step="0.1" onchange="syncVal('auto-level', this.value)">
+                            <button class="stepper-btn" onclick="stepVal('auto-level', 0.1)">+</button>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Filtros de Frecuencia (Cut Freq) -->
+                <div class="section-title" style="margin-top: 10px;">Filtros de Frecuencia (Cut Freq)</div>
+
+                <div class="control-group">
+                    <label class="control-label">Low Cut Freq (Hz)</label>
+                    <div class="control-row-slider">
+                        <div class="slider-track-container">
+                            <input type="range" id="low-cut-range" min="0" max="200" value="20" step="1" oninput="syncVal('low-cut', this.value)">
+                        </div>
+                        <div class="stepper-box">
+                            <button class="stepper-btn" onclick="stepVal('low-cut', -1)">-</button>
+                            <input type="number" id="low-cut-input" class="stepper-input" value="20" min="0" max="200" onchange="syncVal('low-cut', this.value)">
+                            <button class="stepper-btn" onclick="stepVal('low-cut', 1)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">High Cut Freq (Hz)</label>
+                    <div class="control-row-slider">
+                        <div class="slider-track-container">
+                            <input type="range" id="high-cut-range" min="10000" max="24000" value="20000" step="100" oninput="syncVal('high-cut', this.value)">
+                        </div>
+                        <div class="stepper-box">
+                            <button class="stepper-btn" onclick="stepVal('high-cut', -100)">-</button>
+                            <input type="number" id="high-cut-input" class="stepper-input" value="20000" min="10000" max="24000" onchange="syncVal('high-cut', this.value)">
+                            <button class="stepper-btn" onclick="stepVal('high-cut', 100)">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Options -->
+                <div class="section-title" style="margin-top: 10px;">Advanced Options</div>
+
+                <div class="control-group">
+                    <label class="control-label">Video Title (multiple lines allowed)</label>
+                    <textarea id="video-title" class="input-box" placeholder="Título para video u otros metadatos..."></textarea>
+                </div>
+
+                <label class="checkbox-group" style="align-items: flex-start;">
+                    <input type="checkbox" id="preserve-bass" checked style="margin-top: 3px;">
+                    <span>Preserve Bass <span style="font-weight: 400; color: var(--text-muted); font-size: 0.8rem;">(Depending On The Sound Source, It May Be Easy To Distort.)</span></span>
+                </label>
+
+                <div class="control-group" style="margin-top: 4px;">
+                    <label class="control-label">Mastering Algorithm</label>
+                    <div class="algo-tabs" style="display: flex; background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 4px; gap: 4px;">
+                        <button type="button" class="algo-tab" id="tab-v1" onclick="setAlgorithm('v1')" style="flex:1; padding:10px; text-align:center; background:transparent; border:none; border-radius:8px; font-weight:700; font-size:0.85rem; color:var(--text-muted); cursor:pointer;">V1</button>
+                        <button type="button" class="algo-tab active" id="tab-v2" onclick="setAlgorithm('v2')" style="flex:1; padding:10px; text-align:center; background:var(--accent-primary); color:white; border:none; border-radius:8px; font-weight:700; font-size:0.85rem; cursor:pointer;">V2 (Latest)</button>
+                    </div>
+                    <input type="hidden" id="algorithm" value="v2">
+                </div>
+
+                <!-- Formatos y Calidad de Salida -->
+                <div class="section-title" style="margin-top: 10px;">Formatos y Calidad de Salida</div>
+
+                <div class="grid-2">
+                    <div class="control-group">
+                        <label class="control-label">Output Format</label>
+                        <select id="output-format" class="input-box">
+                            <option value="wav_16">WAV (16bit)</option>
+                            <option value="wav_24" selected>WAV (24bit)</option>
+                            <option value="wav_32float">WAV (32bit Float)</option>
+                            <option value="mp3_320">MP3 (320kbps)</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label">Sampling Rate</label>
+                        <select id="sampling-rate" class="input-box">
+                            <option value="original" selected>Same As Original</option>
+                            <option value="44100">44.1 kHz</option>
+                            <option value="48000">48 kHz</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-action" id="process-btn" onclick="initMastering()">
+                    🚀 Iniciar Masterizado Pro
+                </button>
+
+                <div id="status-console"></div>
             </div>
 
-            <button class="btn-master" id="process-btn" onclick="initMastering()">
-                🚀 Iniciar Masterizado Pro
-            </button>
-
-            <div id="status-console"></div>
         </div>
     </div>
 
     <script>
         const API_BASE = "https://api.bakuage.com/api/v1";
 
-        // Cargar token guardado al iniciar la página
+        // Comprobar si ya existe un token guardado al cargar la página
         window.addEventListener('DOMContentLoaded', () => {
             const savedToken = localStorage.getItem('bakuage_api_token');
             if (savedToken) {
-                document.getElementById('api-token').value = savedToken;
+                // Si ya hay token, saltar directo al panel de control
+                document.getElementById('setup-token').value = savedToken;
+                showMasteringView();
             }
         });
 
-        // Borrar token local y abrir enlace para generar/obtener uno nuevo
-        function forgetAndNewToken() {
+        function saveTokenAndProceed() {
+            const tokenInput = document.getElementById('setup-token');
+            const token = tokenInput.value.trim();
+
+            if (!token) {
+                alert("⚠️ Por favor, ingresa tu API Token de Bakuage para continuar.");
+                return;
+            }
+
+            // Guardar en memoria local del navegador
+            localStorage.setItem('bakuage_api_token', token);
+            showMasteringView();
+        }
+
+        function showMasteringView() {
+            document.getElementById('view-welcome').classList.add('hidden');
+            document.getElementById('view-mastering').classList.remove('hidden');
+        }
+
+        function resetTokenSettings() {
             localStorage.removeItem('bakuage_api_token');
-            document.getElementById('api-token').value = '';
-            alert("🧹 Token olvidado correctamente.");
-            window.open('https://bakuage.com/', '_blank');
+            document.getElementById('setup-token').value = '';
+            document.getElementById('view-mastering').classList.add('hidden');
+            document.getElementById('view-welcome').classList.remove('hidden');
         }
 
         function setAlgorithm(algo) {
@@ -609,22 +760,19 @@
         }
 
         async function initMastering() {
-            const tokenInput = document.getElementById("api-token");
-            const token = tokenInput.value.trim();
+            const token = localStorage.getItem('bakuage_api_token');
             const fileInput = document.getElementById("audio-file");
             const btn = document.getElementById("process-btn");
 
             if (!token) {
-                alert("⚠️ Ingresa tu API Token de desarrollador.");
+                alert("⚠️ No se encontró un token válido. Por favor configúralo.");
+                resetTokenSettings();
                 return;
             }
             if (fileInput.files.length === 0) {
-                alert("⚠️ Selecciona una pista de audio.");
+                alert("⚠️ Selecciona una pista de audio para masterizar.");
                 return;
             }
-
-            // Guardar token automáticamente para futuras sesiones en este navegador
-            localStorage.setItem('bakuage_api_token', token);
 
             const targetLoudness = parseFloat(document.getElementById("target-loudness-input").value);
             const truePeak = parseFloat(document.getElementById("true-peak-input").value);
