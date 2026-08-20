@@ -8,8 +8,8 @@
     <style>
         :root {
             --bg-base: #f4f6f9;
-            --surface: #ffffff;
-            --surface-card: #f8fafc;
+            --surface: rgba(255, 255, 255, 0.88); /* Fondo translúcido para ver el pentagrama */
+            --surface-card: rgba(248, 250, 252, 0.8);
             --border-subtle: #e2e8f0;
             --text-main: #1e293b;
             --text-muted: #64748b;
@@ -22,30 +22,36 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-base);
+            /* Fondo con pentagramas y notas musicales integrado suavemente con el tono blanco original */
+            background-color: #ffffff;
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(244, 246, 249, 0.85) 100%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cg fill='%2394a3b8' fill-opacity='0.12'%3E%3C!-- Pentagramas --%3E%3Cpath d='M0,50 Q100,30 200,60 T400,40 M0,60 Q100,40 200,70 T400,50 M0,70 Q100,50 200,80 T400,60 M0,80 Q100,60 200,90 T400,70 M0,90 Q100,70 200,100 T400,80' stroke='%2394a3b8' stroke-width='0.75' fill='none' stroke-opacity='0.15'/%3E%3Cpath d='M0,220 Q120,200 240,240 T400,210 M0,230 Q120,210 240,250 T400,220 M0,240 Q120,220 240,260 T400,230 M0,250 Q120,230 240,270 T400,240 M0,260 Q120,240 240,280 T400,250' stroke='%2394a3b8' stroke-width='0.75' fill='none' stroke-opacity='0.15'/%3E%3C!-- Notas musicales estilizadas --%3E%3Ccircle cx='80' cy='55' r='4'/%3E%3Cpath d='M84,55 L84,35 L92,38 L92,58' fill='%2394a3b8'/%3E%3Ccircle cx='150' cy='75' r='4'/%3E%3Cpath d='M154,75 L154,55 L162,58 L162,78' fill='%2394a3b8'/%3E%3Ccircle cx='280' cy='45' r='4'/%3E%3Cpath d='M284,45 L284,25 L292,28 L292,48' fill='%2394a3b8'/%3E%3Ccircle cx='110' cy='235' r='4'/%3E%3Ccircle cx='130' cy='245' r='4'/%3E%3Cpath d='M114,235 L114,210 L134,220 L134,245' fill='%2394a3b8'/%3E%3C/g%3E%3C/svg%3E");
+            background-repeat: repeat;
             color: var(--text-main);
             margin: 0;
-            padding: 24px;
+            padding: 40px 20px;
             display: flex;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
-            overflow: hidden; /* Evita scrolls dobles en el body */
+            overflow-y: auto; /* Permite el scroll libre de toda la página */
         }
 
         .portal-wrapper {
             width: 100%;
             max-width: 600px;
-            height: 85vh; /* Altura estática controlada */
             background: var(--surface);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border: 1px solid var(--border-subtle);
             border-radius: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* Sombra estática y sutil sin efectos flotantes */
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
-            overflow: hidden;
             position: relative;
+            /* Se elimina la restricción de altura fija para que se desplace con el contenido */
+            height: auto; 
         }
 
         .portal-wrapper::before {
@@ -54,16 +60,19 @@
             top: 0; left: 0; right: 0;
             height: 4px;
             background: linear-gradient(90deg, var(--accent-primary), var(--accent-pink));
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
         }
 
         .portal-header {
-            padding: 20px 28px;
+            padding: 22px 28px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--surface);
-            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.5);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
         }
 
         .brand-container {
@@ -114,9 +123,6 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            overflow-y: auto; /* Solo el contenido interno se desplaza */
-            flex-grow: 1;
-            scroll-behavior: smooth;
         }
 
         .section-title {
@@ -162,6 +168,7 @@
             outline: none;
             border-color: var(--accent-primary);
             box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+            background: #ffffff;
         }
 
         textarea {
@@ -233,7 +240,7 @@
         .stepper-box {
             display: flex;
             align-items: center;
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid var(--border-subtle);
             border-radius: 8px;
             overflow: hidden;
@@ -297,6 +304,7 @@
             letter-spacing: 1px;
             transition: background 0.2s ease;
             margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
         }
 
         .btn-master:hover {
@@ -307,6 +315,7 @@
             background: var(--border-subtle);
             color: var(--text-muted);
             cursor: not-allowed;
+            box-shadow: none;
         }
 
         #status-console {
@@ -335,8 +344,7 @@
         .download-link:hover { text-decoration: underline; }
 
         @media (max-width: 480px) {
-            body { padding: 10px; }
-            .portal-wrapper { height: 95vh; }
+            body { padding: 15px 10px; }
             .portal-body { padding: 18px; }
         }
     </style>
