@@ -139,7 +139,7 @@
             justify-content: space-between;
         }
 
-        .input-box, select {
+        .input-box, select, textarea {
             width: 100%;
             padding: 12px 14px;
             background: var(--surface-card);
@@ -152,10 +152,15 @@
             transition: all 0.2s ease;
         }
 
-        .input-box:focus, select:focus {
+        .input-box:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--accent-primary);
             box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
         }
 
         input[type="file"] {
@@ -181,7 +186,7 @@
             gap: 12px;
         }
 
-        /* Estilo específico para controles de tipo Frecuencia estilo DAW */
+        /* Estilo para controles interactivos tipo DAW (Sliders con Stepper) */
         .freq-control-row {
             display: flex;
             align-items: center;
@@ -254,6 +259,36 @@
             color: var(--text-main);
             outline: none;
             background: transparent;
+        }
+
+        /* Selector de algoritmo estilo Pestañas (Tabs) */
+        .algo-tabs {
+            display: flex;
+            background: var(--surface-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 4px;
+            gap: 4px;
+        }
+
+        .algo-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .algo-tab.active {
+            background: var(--accent-primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);
         }
 
         .checkbox-group {
@@ -396,7 +431,7 @@
                 <input type="number" id="auto-mastering-level" class="input-box" value="1.0" min="0" max="5" step="0.1">
             </div>
 
-            <!-- Low Cut & High Cut Freq con Estilo Gráfico y Botones -->
+            <!-- Filtros de Frecuencia (Cut Freq) -->
             <div class="section-title" style="margin-top: 10px;">Filtros de Frecuencia (Cut Freq)</div>
 
             <div class="control-group">
@@ -427,7 +462,29 @@
                 </div>
             </div>
 
-            <!-- Output Format & Sampling Rate -->
+            <!-- Advanced Options Actualizadas -->
+            <div class="section-title" style="margin-top: 10px;">Advanced Options</div>
+
+            <div class="control-group">
+                <label class="control-label">Video Title (multiple lines allowed)</label>
+                <textarea id="video-title" class="input-box" placeholder="Título para video u otros metadatos..."></textarea>
+            </div>
+
+            <label class="checkbox-group" style="align-items: flex-start;">
+                <input type="checkbox" id="preserve-bass" checked style="margin-top: 3px;">
+                <span>Preserve Bass <span style="font-weight: 400; color: var(--text-muted); font-size: 0.8rem;">(Depending On The Sound Source, It May Be Easy To Distort.)</span></span>
+            </label>
+
+            <div class="control-group" style="margin-top: 4px;">
+                <label class="control-label">Mastering Algorithm</label>
+                <div class="algo-tabs">
+                    <button type="button" class="algo-tab" id="tab-v1" onclick="setAlgorithm('v1')">V1</button>
+                    <button type="button" class="algo-tab active" id="tab-v2" onclick="setAlgorithm('v2')">V2 (Latest)</button>
+                </div>
+                <input type="hidden" id="algorithm" value="v2">
+            </div>
+
+            <!-- Formatos y Calidad de Salida -->
             <div class="section-title" style="margin-top: 10px;">Formatos y Calidad de Salida</div>
 
             <div class="grid-2">
@@ -450,22 +507,6 @@
                 </div>
             </div>
 
-            <div class="grid-2" style="margin-top: 6px;">
-                <div class="control-group">
-                    <label class="control-label">Algoritmo</label>
-                    <select id="algorithm" class="input-box">
-                        <option value="v2">V2 (Latest)</option>
-                        <option value="v1">V1</option>
-                    </select>
-                </div>
-                <div class="control-group" style="justify-content: flex-end; display: flex; align-items: center;">
-                    <label class="checkbox-group" style="margin-top: 20px;">
-                        <input type="checkbox" id="preserve-bass" checked>
-                        Preservar Bajos
-                    </label>
-                </div>
-            </div>
-
             <button class="btn-master" id="process-btn" onclick="initMastering()">
                 🚀 Iniciar Masterizado Pro
             </button>
@@ -477,15 +518,25 @@
     <script>
         const API_BASE = "https://api.bakuage.com/api/v1";
 
-        // Funciones de sincronización para los controles de frecuencia tipo DAW
+        // Selector de algoritmo mediante pestañas
+        function setAlgorithm(algo) {
+            document.getElementById("algorithm").value = algo;
+            if (algo === 'v1') {
+                document.getElementById("tab-v1").classList.add("active");
+                document.getElementById("tab-v2").classList.remove("active");
+            } else {
+                document.getElementById("tab-v2").classList.add("active");
+                document.getElementById("tab-v1").classList.remove("active");
+            }
+        }
+
+        // Sincronización para frecuencias (Low Cut / High Cut)
         function syncFreq(type, val) {
             const range = document.getElementById(`${type}-cut-range`);
             const input = document.getElementById(`${type}-cut-input`);
             let numVal = parseFloat(val);
-            
             if (isNaN(numVal)) return;
 
-            // Restringir límites según el tipo
             if (type === 'low') {
                 if (numVal < 0) numVal = 0;
                 if (numVal > 200) numVal = 200;
@@ -523,7 +574,7 @@
             const fileInput = document.getElementById("audio-file");
             const btn = document.getElementById("process-btn");
 
-            // Recopilar parámetros incluyendo las frecuencias de corte
+            // Recopilar parámetros completos actualizados
             const targetLoudness = parseFloat(document.getElementById("target-loudness").value);
             const truePeak = parseFloat(document.getElementById("true-peak").value);
             const ceilingMode = document.getElementById("ceiling-mode").value;
@@ -531,10 +582,11 @@
             const autoMasteringLevel = parseFloat(document.getElementById("auto-mastering-level").value);
             const lowCutFreq = parseFloat(document.getElementById("low-cut-input").value);
             const highCutFreq = parseFloat(document.getElementById("high-cut-input").value);
+            const videoTitle = document.getElementById("video-title").value;
+            const preserveBass = document.getElementById("preserve-bass").checked;
+            const algorithm = document.getElementById("algorithm").value;
             const outputFormat = document.getElementById("output-format").value;
             const samplingRate = document.getElementById("sampling-rate").value;
-            const algorithm = document.getElementById("algorithm").value;
-            const preserveBass = document.getElementById("preserve-bass").checked;
 
             if (!token) {
                 alert("⚠️ Ingresa tu API Token para continuar.");
@@ -551,7 +603,6 @@
             logMessage("Conectando con el servidor...");
 
             try {
-                // 1. Crear tarea enviando los parámetros completos a la API
                 const createRes = await fetch(`${API_BASE}/masterings`, {
                     method: 'POST',
                     headers: { 
@@ -566,10 +617,11 @@
                         automatic_mastering_level: autoMasteringLevel,
                         low_cut_freq: lowCutFreq,
                         high_cut_freq: highCutFreq,
-                        output_format: outputFormat,
-                        sampling_rate: samplingRate,
+                        video_title: videoTitle,
+                        preserve_bass: preserveBass,
                         algorithm: algorithm,
-                        preserve_bass: preserveBass
+                        output_format: outputFormat,
+                        sampling_rate: samplingRate
                     })
                 });
 
@@ -580,7 +632,6 @@
 
                 logMessage(`Sesión creada [ID: ${masteringId}]`);
 
-                // 2. Subir archivo binario
                 logMessage(`Cargando archivo (${file.name})...`);
                 const uploadRes = await fetch(uploadUrl, {
                     method: 'PUT',
@@ -590,7 +641,6 @@
                 if (!uploadRes.ok) throw new Error("Falló la subida del archivo al almacenamiento.");
                 logMessage("Archivo cargado correctamente.");
 
-                // 3. Activar procesamiento
                 logMessage("Enviando orden de procesamiento...");
                 const patchRes = await fetch(`${API_BASE}/masterings/${masteringId}`, {
                     method: 'PATCH',
@@ -603,7 +653,6 @@
 
                 if (!patchRes.ok) throw new Error("No se pudo activar el proceso de masterizado.");
 
-                // 4. Polling de estado
                 logMessage("Motor analizando y procesando pista...");
                 pollStatus(token, masteringId);
 
