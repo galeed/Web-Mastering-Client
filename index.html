@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --surface: rgba(255, 255, 255, 0.82); /* Más translúcido para que se filtre el fondo */
+            --surface: rgba(255, 255, 255, 0.82);
             --surface-card: rgba(241, 245, 249, 0.7);
             --border-subtle: #cbd5e1;
             --text-main: #0f172a;
@@ -19,9 +19,7 @@
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            /* Fondo general ligeramente tonificado para que el panel translúcido resalte */
             background-color: #f8fafc;
-            /* Pentagramas y notas en tono oscuro tipo tinta real */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cg fill='%231e293b' fill-opacity='0.45'%3E%3Cpath d='M0,40 Q75,20 150,50 T300,30 M0,50 Q75,30 150,60 T300,40 M0,60 Q75,40 150,70 T300,50 M0,70 Q75,50 150,80 T300,60 M0,80 Q75,60 150,90 T300,70' stroke='%231e293b' stroke-width='0.9' fill='none' stroke-opacity='0.5'/%3E%3Cpath d='M0,190 Q75,170 150,200 T300,180 M0,200 Q75,180 150,210 T300,190 M0,210 Q75,190 150,220 T300,200 M0,220 Q75,200 150,230 T300,210 M0,230 Q75,210 150,240 T300,220' stroke='%231e293b' stroke-width='0.9' fill='none' stroke-opacity='0.5'/%3E%3Ccircle cx='70' cy='45' r='4'/%3E%3Cpath d='M73,45 L73,23 L81,25 L81,47' fill='%231e293b'/%3E%3Ccircle cx='200' cy='65' r='4'/%3E%3Cpath d='M203,65 L203,43 L211,45 L211,67' fill='%231e293b'/%3E%3Ccircle cx='110' cy='205' r='4'/%3E%3Ccircle cx='130' cy='215' r='4'/%3E%3C/g%3E%3C/svg%3E");
             background-repeat: repeat;
             color: var(--text-main);
@@ -140,6 +138,20 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+        }
+
+        .token-action-btn {
+            background: none;
+            border: none;
+            color: var(--accent-primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0;
+            text-decoration: underline;
+        }
+        .token-action-btn:hover {
+            color: var(--accent-hover);
         }
 
         .input-box, select, textarea {
@@ -357,7 +369,10 @@
         <div class="portal-body">
             <!-- Credenciales y Archivo -->
             <div class="control-group">
-                <label class="control-label">API Token de Bakuage</label>
+                <div class="control-label">
+                    <span>API Token de Bakuage</span>
+                    <button type="button" class="token-action-btn" onclick="forgetAndNewToken()">Olvidar / Generar nuevo</button>
+                </div>
                 <input type="text" id="api-token" class="input-box" placeholder="Pega tu token de desarrollador aquí...">
             </div>
 
@@ -515,6 +530,22 @@
     <script>
         const API_BASE = "https://api.bakuage.com/api/v1";
 
+        // Cargar token guardado al iniciar la página
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedToken = localStorage.getItem('bakuage_api_token');
+            if (savedToken) {
+                document.getElementById('api-token').value = savedToken;
+            }
+        });
+
+        // Borrar token local y abrir enlace para generar/obtener uno nuevo
+        function forgetAndNewToken() {
+            localStorage.removeItem('bakuage_api_token');
+            document.getElementById('api-token').value = '';
+            alert("🧹 Token olvidado correctamente.");
+            window.open('https://bakuage.com/', '_blank');
+        }
+
         function setAlgorithm(algo) {
             document.getElementById("algorithm").value = algo;
             if (algo === 'v1') {
@@ -578,9 +609,22 @@
         }
 
         async function initMastering() {
-            const token = document.getElementById("api-token").value.trim();
+            const tokenInput = document.getElementById("api-token");
+            const token = tokenInput.value.trim();
             const fileInput = document.getElementById("audio-file");
             const btn = document.getElementById("process-btn");
+
+            if (!token) {
+                alert("⚠️ Ingresa tu API Token de desarrollador.");
+                return;
+            }
+            if (fileInput.files.length === 0) {
+                alert("⚠️ Selecciona una pista de audio.");
+                return;
+            }
+
+            // Guardar token automáticamente para futuras sesiones en este navegador
+            localStorage.setItem('bakuage_api_token', token);
 
             const targetLoudness = parseFloat(document.getElementById("target-loudness-input").value);
             const truePeak = parseFloat(document.getElementById("true-peak-input").value);
@@ -594,15 +638,6 @@
             const algorithm = document.getElementById("algorithm").value;
             const outputFormat = document.getElementById("output-format").value;
             const samplingRate = document.getElementById("sampling-rate").value;
-
-            if (!token) {
-                alert("⚠️ Ingresa tu API Token de desarrollador.");
-                return;
-            }
-            if (fileInput.files.length === 0) {
-                alert("⚠️ Selecciona una pista de audio.");
-                return;
-            }
 
             const file = fileInput.files[0];
             btn.disabled = true;
