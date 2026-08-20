@@ -481,26 +481,30 @@
                     Conoce más sobre sus servicios en <a href="https://bakuage.com/" target="_blank">bakuage.com</a>.
                 </div>
 
-                <div class="section-title">Mini Tutorial de Uso</div>
+                <div class="section-title">Mini Tutorial de Extracción de Token</div>
                 <div class="tutorial-container">
                     <div class="tutorial-step">
                         <div class="tutorial-number">1</div>
-                        <span><strong>Obtén tu token:</strong> Entra a <a href="https://bakuage.com/" target="_blank" style="color:var(--accent-primary); font-weight:700;">Bakuage</a>. La plataforma te asigna tu token automático al ingresar (suele verse en tu perfil o datos de sesión).</span>
+                        <span>Entra al sitio oficial de <a href="https://bakuage.com/" target="_blank" style="color:var(--accent-primary); font-weight:700;">Bakuage</a> y dirígete a la sección de <strong>Automated Mastering</strong>.</span>
                     </div>
                     <div class="tutorial-step">
                         <div class="tutorial-number">2</div>
-                        <span><strong>Identifica el formato:</strong> El token se genera en automático y comienza con la palabra <strong>guest_</strong> seguida de caracteres, luciendo así:<br>
-                        <code class="token-example-tag">guest_dgv70vu2ueo22n5e3l4r0ocghlaqohjsrk6lniipj1c</code></span>
+                        <span>Ubica y haz clic en la opción de <strong>For Developer</strong> en el menú o panel de usuario.</span>
                     </div>
                     <div class="tutorial-step">
                         <div class="tutorial-number">3</div>
-                        <span><strong>Pégalo y masteriza:</strong> Ingresa el token en la casilla inferior. La app lo guardará de forma segura en tu navegador para recordar tus futuras sesiones.</span>
+                        <span>Copia tu <strong>Access Token</strong> generado en automático (empieza con <strong>guest_</strong>), el cual luce de esta forma:<br>
+                        <code class="token-example-tag">guest_k9geranfmrokvrul1afdukbs3ml11lj7s6f6encjdo0g</code></span>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="tutorial-number">4</div>
+                        <span>Pégalo en la casilla inferior. La app lo guardará de forma segura en tu navegador para tus futuras sesiones.</span>
                     </div>
                 </div>
 
                 <div class="control-group" style="margin-top: 10px;">
                     <label class="control-label">API Token de Bakuage (Acceso Personal)</label>
-                    <input type="text" id="setup-token" class="input-box" placeholder="Ej. guest_dgv70vu2ueo22n5e3l4r0ocghlaqohjsrk6lniipj1c">
+                    <input type="text" id="setup-token" class="input-box" placeholder="Ej. guest_k9geranfmrokvrul1afdukbs3ml11lj7s6f6encjdo0g">
                 </div>
 
                 <button class="btn-action" onclick="saveTokenAndProceed()">
