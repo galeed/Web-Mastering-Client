@@ -186,7 +186,6 @@
             gap: 12px;
         }
 
-        /* Controles interactivos con Slider de Línea Horizontal y Stepper */
         .control-row-slider {
             display: flex;
             align-items: center;
@@ -347,17 +346,17 @@
                 <div class="brand-logo">🐱</div>
                 <div>
                     <h1 class="brand-title">Mastering Pro App</h1>
-                    <p class="brand-subtitle">Console UI</p>
+                    <p class="brand-subtitle">API Integration</p>
                 </div>
             </div>
-            <div class="portal-badge">Custom</div>
+            <div class="portal-badge">Bakuage</div>
         </header>
 
         <div class="portal-body">
             <!-- Credenciales y Archivo -->
             <div class="control-group">
                 <label class="control-label">API Token de Bakuage</label>
-                <input type="text" id="api-token" class="input-box" placeholder="Pega tu token aquí...">
+                <input type="text" id="api-token" class="input-box" placeholder="Pega tu token de desarrollador aquí...">
             </div>
 
             <div class="control-group">
@@ -365,7 +364,7 @@
                 <input type="file" id="audio-file" class="input-box" accept=".wav,.flac,.mp3,audio/wav,audio/flac,audio/mpeg">
             </div>
 
-            <!-- Parámetros de Limiter con Sliders de Línea Horizontal -->
+            <!-- Parámetros de Limiter -->
             <div class="section-title">Parámetros de Mastering</div>
 
             <div class="control-group">
@@ -512,6 +511,7 @@
     </div>
 
     <script>
+        // Endpoint oficial de la API de Bakuage (según especificación OpenAPI)
         const API_BASE = "https://api.bakuage.com/api/v1";
 
         function setAlgorithm(algo) {
@@ -529,14 +529,12 @@
             }
         }
 
-        // Sincronización universal para campos numéricos con slider y stepper
         function syncVal(id, val) {
             const range = document.getElementById(`${id}-range`);
             const input = document.getElementById(`${id}-input`);
             let numVal = parseFloat(val);
             if (isNaN(numVal)) return;
 
-            // Restricciones específicas por campo
             if (id === 'target-loudness') {
                 if (numVal < -30) numVal = -30;
                 if (numVal > 0) numVal = 0;
@@ -597,7 +595,7 @@
             const samplingRate = document.getElementById("sampling-rate").value;
 
             if (!token) {
-                alert("⚠️ Ingresa tu API Token para continuar.");
+                alert("⚠️ Ingresa tu API Token de desarrollador.");
                 return;
             }
             if (fileInput.files.length === 0) {
@@ -608,9 +606,10 @@
             const file = fileInput.files[0];
             btn.disabled = true;
             resetConsole();
-            logMessage("Conectando con el servidor...");
+            logMessage("Conectando con la API de Bakuage...");
 
             try {
+                // 1. Crear el recurso de masterizado (POST /masterings)
                 const createRes = await fetch(`${API_BASE}/masterings`, {
                     method: 'POST',
                     headers: { 
@@ -633,23 +632,29 @@
                     })
                 });
 
-                if (!createRes.ok) throw new Error(`Error de autenticación o parámetros (HTTP ${createRes.status})`);
+                if (!createRes.ok) {
+                    const errData = await createRes.json().catch(() => ({}));
+                    throw new Error(errData.message || `Error de autenticación o parámetros (HTTP ${createRes.status})`);
+                }
+                
                 const createData = await createRes.json();
                 const masteringId = createData.id;
                 const uploadUrl = createData.upload_url;
 
-                logMessage(`Sesión creada [ID: ${masteringId}]`);
+                logMessage(`Sesión creada exitosamente [ID: ${masteringId}]`);
 
-                logMessage(`Cargando archivo (${file.name})...`);
+                // 2. Subir el archivo de audio directamente a la URL presignada provista por la API (PUT)
+                logMessage(`Subiendo archivo de audio (${file.name})...`);
                 const uploadRes = await fetch(uploadUrl, {
                     method: 'PUT',
                     body: file
                 });
 
-                if (!uploadRes.ok) throw new Error("Falló la subida del archivo al almacenamiento.");
-                logMessage("Archivo cargado correctamente.");
+                if (!uploadRes.ok) throw new Error("Falló la subida del archivo al almacenamiento de la API.");
+                logMessage("Archivo cargado correctamente en el servidor.");
 
-                logMessage("Enviando orden de procesamiento...");
+                // 3. Notificar que la subida finalizó cambiando el estado a 'uploaded' (PATCH /masterings/{id})
+                logMessage("Enviando orden de inicio de procesamiento...");
                 const patchRes = await fetch(`${API_BASE}/masterings/${masteringId}`, {
                     method: 'PATCH',
                     headers: { 
@@ -659,9 +664,9 @@
                     body: JSON.stringify({ status: 'uploaded' })
                 });
 
-                if (!patchRes.ok) throw new Error("No se pudo activar el proceso de masterizado.");
+                if (!patchRes.ok) throw new Error("No se pudo activar el proceso de masterizado en la API.");
 
-                logMessage("Motor analizando y procesando pista...");
+                logMessage("Motor de IA procesando la pista...");
                 pollStatus(token, masteringId);
 
             } catch (error) {
@@ -670,16 +675,17 @@
             }
         }
 
+        // 4. Polling periódico del estado de la tarea (GET /masterings/{id})
         function pollStatus(token, masteringId) {
             const interval = setInterval(async () => {
                 try {
                     const res = await fetch(`${API_BASE}/masterings/${masteringId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
-                    if (!res.ok) throw new Error("Error consultando estado.");
+                    if (!res.ok) throw new Error("Error consultando el estado del proceso.");
                     const data = await res.json();
 
-                    logMessage(`Estado: ${data.status}`);
+                    logMessage(`Estado actual: ${data.status}`);
 
                     if (data.status === 'finished') {
                         clearInterval(interval);
@@ -690,7 +696,7 @@
                         document.getElementById("process-btn").disabled = false;
                     } else if (data.status === 'failed' || data.status === 'error') {
                         clearInterval(interval);
-                        logMessage("❌ El proceso falló en el servidor.");
+                        logMessage("❌ El proceso falló en el servidor de Bakuage.");
                         document.getElementById("process-btn").disabled = false;
                     }
                 } catch (e) {
