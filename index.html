@@ -114,7 +114,6 @@
             gap: 20px;
         }
 
-        /* Estilos de la Vista de Bienvenida */
         .welcome-view {
             display: flex;
             flex-direction: column;
@@ -203,13 +202,13 @@
             background: #0f172a;
             color: #38bdf8;
             font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            padding: 2px 6px;
+            font-size: 0.72rem;
+            padding: 3px 6px;
             border-radius: 4px;
             margin-top: 4px;
+            word-break: break-all;
         }
 
-        /* Utilidades generales */
         .section-title {
             font-size: 0.9rem;
             font-weight: 700;
@@ -486,12 +485,12 @@
                 <div class="tutorial-container">
                     <div class="tutorial-step">
                         <div class="tutorial-number">1</div>
-                        <span><strong>Obtén tu token:</strong> Entra a <a href="https://bakuage.com/" target="_blank" style="color:var(--accent-primary); font-weight:700;">Bakuage</a>, inicia sesión en tu cuenta de desarrollador y genera o copia tu clave API.</span>
+                        <span><strong>Obtén tu token:</strong> Entra a <a href="https://bakuage.com/" target="_blank" style="color:var(--accent-primary); font-weight:700;">Bakuage</a>. La plataforma te asigna tu token automático al ingresar (suele verse en tu perfil o datos de sesión).</span>
                     </div>
                     <div class="tutorial-step">
                         <div class="tutorial-number">2</div>
-                        <span><strong>Identifica el formato:</strong> El token suele verse como una cadena larga de letras y números similar a esto:<br>
-                        <code class="token-example-tag">bkg_live_abc123xyz789tokenfalsoejemplo</code></span>
+                        <span><strong>Identifica el formato:</strong> El token se genera en automático y comienza con la palabra <strong>guest_</strong> seguida de caracteres, luciendo así:<br>
+                        <code class="token-example-tag">guest_dgv70vu2ueo22n5e3l4r0ocghlaqohjsrk6lniipj1c</code></span>
                     </div>
                     <div class="tutorial-step">
                         <div class="tutorial-number">3</div>
@@ -501,7 +500,7 @@
 
                 <div class="control-group" style="margin-top: 10px;">
                     <label class="control-label">API Token de Bakuage (Acceso Personal)</label>
-                    <input type="text" id="setup-token" class="input-box" placeholder="Ej. bkg_live_abc123xyz789tokenfalsoejemplo">
+                    <input type="text" id="setup-token" class="input-box" placeholder="Ej. guest_dgv70vu2ueo22n5e3l4r0ocghlaqohjsrk6lniipj1c">
                 </div>
 
                 <button class="btn-action" onclick="saveTokenAndProceed()">
@@ -686,7 +685,7 @@
             const token = tokenInput.value.trim();
 
             if (!token) {
-                alert("⚠️ Por favor, ingresa tu API Token de Bakuage para continuar.");
+                alert("⚠️ Por favor, ingresa tu token de Bakuage para continuar.");
                 return;
             }
 
@@ -868,7 +867,7 @@
         function pollStatus(token, masteringId) {
             const interval = setInterval(async () => {
                 try {
-                    const res = __await_or_fetch = await fetch(`${API_BASE}/masterings/${masteringId}`, {
+                    const res = await fetch(`${API_BASE}/masterings/${masteringId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (!res.ok) throw new Error("Error consultando el estado del proceso.");
