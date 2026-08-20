@@ -450,6 +450,23 @@
             body { padding: 15px 10px; }
             .portal-body { padding: 18px; }
         }
+        
+/* Estilos para el botón y la hoja de ayuda */
+.help-main-btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background 0.2s;
+}
+.help-main-btn:hover {
+    background-color: #555;
+}
+
     </style>
 </head>
 <body>
@@ -460,7 +477,9 @@
                 <div class="brand-logo">🐱</div>
                 <div>
                     <h1 class="brand-title">Mastering Pro App</h1>
-                    <p class="brand-subtitle">Audio Suite</p>
+                    <p class="brand-subtitle">Audio Suite</p> <button onclick="document.getElementById('helpModal').style.display='block'" class="help-main-btn">
+    Ayuda
+</button>
                 </div>
             </div>
             <div class="portal-badge">Bakuage Engine</div>
@@ -898,5 +917,36 @@
             }, 6000);
         }
     </script>
+    
+<div id="helpModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000;">
+    <div style="background:white; width:80%; max-width:600px; margin:5% auto; padding:20px; border-radius:10px; position:relative; max-height:80vh; overflow-y:auto; 
+                background-image: repeating-linear-gradient(transparent, transparent 19px, #ccc 20px); border: 1px solid #aaa;">
+        
+        <!-- Botón de cerrar -->
+        <span onclick="document.getElementById('helpModal').style.display='none'" 
+              style="position:absolute; top:10px; right:15px; cursor:pointer; font-size:24px; font-weight:bold;">❌</span>
+
+        <!-- Título con Clave de Sol -->
+        <h2 style="font-family: serif; border-bottom: 2px solid #333; padding-bottom: 10px;">𝄞 Guía de Masterización</h2>
+
+        <!-- Contenido -->
+        <ul style="line-height: 1.6; font-family: 'Courier New', Courier, monospace;">
+            <li><strong>Oversampling (Sobremuestreo):</strong> Representa la magnificación del sobremuestreo. Si se establece en 1x, se comporta como antes. En el caso de 1x, la intensidad sonora puede disminuir significativamente si el límite (Ceiling) se establece en algo distinto a "Peak". Ajustarlo a 2x ralentizará el proceso, pero evita que la intensidad sonora se reduzca incluso cuando el límite se establece en algo distinto a "Peak".</li>
+            <br>
+            <li><strong>Automatic Mastering (Masterización automática):</strong> La calidad del sonido se modifica de forma agresiva al habilitar la masterización automática. Cuando está desactivada, solo se realizan la limitación y un tratamiento simple. Si deseas ajustar la calidad del sonido automáticamente, intenta usarla.</li>
+            <br>
+            <li><strong>Automatic Mastering (Proceso):</strong> Es un proceso que acerca el sonido al sonido preferido, ajustando la respuesta de frecuencia, el rango dinámico y la localización.</li>
+            <br>
+            <li><strong>Level (Nivel):</strong> Es el grado en el que la calidad del sonido se modifica. Si está cerca de 1, el cambio es marcado. Si no entiendes bien, es seguro configurarlo en 0.5.</li>
+            <br>
+            <li><strong>Mastering Algorithm (Algoritmo):</strong> Especifica el algoritmo (V1 clásico / V2 reciente). Debes habilitar la masterización automática para cambiarlo.</li>
+            <br>
+            <li><strong>Target Loudness (dB):</strong> Representa el valor objetivo de la intensidad sonora después de la masterización.</li>
+            <br>
+            <li><strong>Preserve Bass (Preservar bajos):</strong> Comprime de manera que se preserven los bajos al subir el volumen. Si no estás seguro, es seguro mantenerlo activado.</li>
+        </ul>
+    </div>
+</div>
+
 </body>
 </html>
