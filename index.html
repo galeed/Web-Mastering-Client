@@ -7,51 +7,43 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #f4f6f9;
-            --surface: rgba(255, 255, 255, 0.88); /* Fondo translúcido para ver el pentagrama */
-            --surface-card: rgba(248, 250, 252, 0.8);
-            --border-subtle: #e2e8f0;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            --surface: rgba(255, 255, 255, 0.85); /* Opaco/translúcido para ver el fondo */
+            --surface-card: rgba(248, 250, 252, 0.75);
+            --border-subtle: #cbd5e1;
+            --text-main: #0f172a;
+            --text-muted: #475569;
             --accent-primary: #0284c7;
             --accent-hover: #0369a1;
             --accent-pink: #ec4899;
-            --success: #10b981;
-            --error: #ef4444;
         }
 
+        /* Página fluida y estática, permitiendo scroll natural */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            /* Fondo con pentagramas y notas musicales integrado suavemente con el tono blanco original */
             background-color: #ffffff;
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(244, 246, 249, 0.85) 100%),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cg fill='%2394a3b8' fill-opacity='0.12'%3E%3C!-- Pentagramas --%3E%3Cpath d='M0,50 Q100,30 200,60 T400,40 M0,60 Q100,40 200,70 T400,50 M0,70 Q100,50 200,80 T400,60 M0,80 Q100,60 200,90 T400,70 M0,90 Q100,70 200,100 T400,80' stroke='%2394a3b8' stroke-width='0.75' fill='none' stroke-opacity='0.15'/%3E%3Cpath d='M0,220 Q120,200 240,240 T400,210 M0,230 Q120,210 240,250 T400,220 M0,240 Q120,220 240,260 T400,230 M0,250 Q120,230 240,270 T400,240 M0,260 Q120,240 240,280 T400,250' stroke='%2394a3b8' stroke-width='0.75' fill='none' stroke-opacity='0.15'/%3E%3C!-- Notas musicales estilizadas --%3E%3Ccircle cx='80' cy='55' r='4'/%3E%3Cpath d='M84,55 L84,35 L92,38 L92,58' fill='%2394a3b8'/%3E%3Ccircle cx='150' cy='75' r='4'/%3E%3Cpath d='M154,75 L154,55 L162,58 L162,78' fill='%2394a3b8'/%3E%3Ccircle cx='280' cy='45' r='4'/%3E%3Cpath d='M284,45 L284,25 L292,28 L292,48' fill='%2394a3b8'/%3E%3Ccircle cx='110' cy='235' r='4'/%3E%3Ccircle cx='130' cy='245' r='4'/%3E%3Cpath d='M114,235 L114,210 L134,220 L134,245' fill='%2394a3b8'/%3E%3C/g%3E%3C/svg%3E");
+            /* Patrón de pentagramas y notas musicales inspirado en tu imagen */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cg fill='%2364748b' fill-opacity='0.15'%3E%3Cpath d='M0,40 Q75,20 150,50 T300,30 M0,50 Q75,30 150,60 T300,40 M0,60 Q75,40 150,70 T300,50 M0,70 Q75,50 150,80 T300,60 M0,80 Q75,60 150,90 T300,70' stroke='%2364748b' stroke-width='0.8' fill='none' stroke-opacity='0.2'/%3E%3Cpath d='M0,190 Q75,170 150,200 T300,180 M0,200 Q75,180 150,210 T300,190 M0,210 Q75,190 150,220 T300,200 M0,220 Q75,200 150,230 T300,210 M0,230 Q75,210 150,240 T300,220' stroke='%2364748b' stroke-width='0.8' fill='none' stroke-opacity='0.2'/%3E%3Ccircle cx='70' cy='45' r='3.5'/%3E%3Cpath d='M73,45 L73,25 L80,27 L80,47' fill='%2364748b'/%3E%3Ccircle cx='200' cy='65' r='3.5'/%3E%3Cpath d='M203,65 L203,45 L210,47 L210,67' fill='%2364748b'/%3E%3Ccircle cx='110' cy='205' r='3.5'/%3E%3Ccircle cx='130' cy='215' r='3.5'/%3E%3C/g%3E%3C/svg%3E");
             background-repeat: repeat;
             color: var(--text-main);
             margin: 0;
             padding: 40px 20px;
-            display: flex;
-            justify-content: center;
             min-height: 100vh;
             box-sizing: border-box;
-            overflow-y: auto; /* Permite el scroll libre de toda la página */
         }
 
+        /* Cuadro estático que se mueve con el scroll de la página */
         .portal-wrapper {
-            width: 100%;
             max-width: 600px;
+            margin: 0 auto; /* Centrado pero estático en el flujo */
             background: var(--surface);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             border: 1px solid var(--border-subtle);
             border-radius: 20px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             display: flex;
             flex-direction: column;
             position: relative;
-            /* Se elimina la restricción de altura fija para que se desplace con el contenido */
-            height: auto; 
         }
 
         .portal-wrapper::before {
@@ -70,7 +62,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.6);
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
         }
