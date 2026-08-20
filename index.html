@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Mastering Pro App 🐱</title>
-    <!-- Tipografía moderna estilo editorial / portal musical -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #0a0b0e;
-            --surface: #13151b;
-            --surface-card: #181b22;
-            --border-subtle: #252a35;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --accent-cyan: #00f2fe;
-            --accent-pink: #ff007f; /* Toque vibrante estilo club / música electrónica */
+            --bg-base: #f4f6f9;
+            --surface: #ffffff;
+            --surface-card: #f8fafc;
+            --border-subtle: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent-primary: #0284c7; /* Azul tipo DAW/Portal */
+            --accent-hover: #0369a1;
+            --accent-pink: #ec4899;
             --success: #10b981;
             --error: #ef4444;
         }
 
         body {
-            font-family: 'Plus Jakarta+Sans', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: var(--bg-base);
             color: var(--text-main);
             margin: 0;
@@ -31,38 +31,34 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.05) 0%, transparent 40%);
         }
 
         .portal-wrapper {
             width: 100%;
-            max-width: 520px;
+            max-width: 600px;
             background: var(--surface);
             border: 1px solid var(--border-subtle);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             overflow: hidden;
             position: relative;
         }
 
-        /* Barra superior decorativa estilo portal */
         .portal-wrapper::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-pink), var(--accent-cyan));
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-pink));
         }
 
         .portal-header {
-            padding: 24px 28px;
+            padding: 22px 28px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--surface-card);
+            background: var(--surface);
         }
 
         .brand-container {
@@ -73,7 +69,7 @@
 
         .brand-logo {
             font-size: 2.2rem;
-            background: var(--surface);
+            background: var(--surface-card);
             padding: 8px;
             border-radius: 12px;
             border: 1px solid var(--border-subtle);
@@ -84,7 +80,7 @@
             font-size: 1.25rem;
             font-weight: 800;
             letter-spacing: -0.5px;
-            color: #fff;
+            color: var(--text-main);
             margin: 0;
         }
 
@@ -100,11 +96,11 @@
         .portal-badge {
             font-family: 'Space Mono', monospace;
             font-size: 0.65rem;
-            background: rgba(0, 242, 254, 0.1);
-            color: var(--accent-cyan);
+            background: rgba(2, 132, 199, 0.1);
+            color: var(--accent-primary);
             padding: 4px 8px;
             border-radius: 6px;
-            border: 1px solid rgba(0, 242, 254, 0.2);
+            border: 1px solid rgba(2, 132, 199, 0.2);
             text-transform: uppercase;
         }
 
@@ -112,76 +108,98 @@
             padding: 28px;
             display: flex;
             flex-direction: column;
-            gap: 22px;
+            gap: 20px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid var(--border-subtle);
+            padding-bottom: 4px;
         }
 
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .control-label {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-main);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .control-label span {
-            color: var(--accent-pink);
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            text-transform: none;
-        }
-
-        /* Inputs estilizados tipo consola */
-        .input-box {
+        .input-box, select {
             width: 100%;
-            padding: 14px 16px;
-            background: var(--bg-base);
+            padding: 12px 14px;
+            background: var(--surface-card);
             border: 1px solid var(--border-subtle);
-            color: #fff;
-            border-radius: 12px;
+            color: var(--text-main);
+            border-radius: 10px;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 0.95px;
+            font-size: 0.9rem;
             box-sizing: border-box;
             transition: all 0.2s ease;
         }
 
-        .input-box:focus {
+        .input-box:focus, select:focus {
             outline: none;
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.1);
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
         }
 
         input[type="file"] {
             color: var(--text-muted);
             cursor: pointer;
+            padding: 8px;
         }
 
         input[type="file"]::file-selector-button {
             background: var(--border-subtle);
-            color: #fff;
+            color: var(--text-main);
             border: none;
             padding: 8px 12px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
             margin-right: 12px;
-            transition: background 0.2s;
         }
 
-        input[type="file"]::file-selector-button:hover {
-            background: var(--accent-pink);
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-primary);
+            cursor: pointer;
         }
 
         .btn-master {
-            background: linear-gradient(135deg, var(--accent-pink), #ff2a5f);
+            background: var(--accent-primary);
             color: white;
             border: none;
             padding: 16px;
@@ -192,15 +210,14 @@
             width: 100%;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 20px rgba(255, 0, 127, 0.3);
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
             transition: all 0.2s ease;
-            margin-top: 6px;
+            margin-top: 10px;
         }
 
         .btn-master:hover {
-            opacity: 0.95;
+            background: var(--accent-hover);
             transform: translateY(-1px);
-            box-shadow: 0 6px 25px rgba(255, 0, 127, 0.5);
         }
 
         .btn-master:disabled {
@@ -211,19 +228,18 @@
             transform: none;
         }
 
-        /* Consola de estado */
         #status-console {
-            background: var(--bg-base);
-            border: 1px solid var(--border-subtle);
-            border-radius: 12px;
-            padding: 16px;
+            background: #0f172a;
+            color: #38bdf8;
+            border-radius: 10px;
+            padding: 14px;
             font-family: 'Space Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--text-muted);
+            font-size: 0.75rem;
             white-space: pre-wrap;
-            max-height: 160px;
+            max-height: 140px;
             overflow-y: auto;
             display: none;
+            border: 1px solid #1e293b;
         }
 
         #status-console.active {
@@ -231,16 +247,15 @@
         }
 
         .download-link {
-            color: var(--accent-cyan) !important;
+            color: #4ade80 !important;
             text-decoration: none;
             font-weight: bold;
         }
         .download-link:hover { text-decoration: underline; }
 
         @media (max-width: 480px) {
-            body { padding: 12px; }
-            .portal-header { padding: 18px 20px; }
-            .portal-body { padding: 20px; }
+            body { padding: 10px; }
+            .portal-body { padding: 18px; }
         }
     </style>
 </head>
@@ -252,29 +267,62 @@
                 <div class="brand-logo">🐱</div>
                 <div>
                     <h1 class="brand-title">Mastering Pro App</h1>
-                    <p class="brand-subtitle">Cloud Mastering Console</p>
+                    <p class="brand-subtitle">Console UI</p>
                 </div>
             </div>
-            <div class="portal-badge">v1.0.0</div>
+            <div class="portal-badge">Custom</div>
         </header>
 
         <div class="portal-body">
+            <!-- Credenciales y Archivo -->
             <div class="control-group">
-                <label class="control-label">
-                    1. Credencial de Acceso <span>API Token</span>
-                </label>
+                <label class="control-label">API Token de Bakuage</label>
                 <input type="text" id="api-token" class="input-box" placeholder="Pega tu token aquí...">
             </div>
 
             <div class="control-group">
-                <label class="control-label">
-                    2. Archivo de Audio <span>WAV / FLAC / MP3</span>
-                </label>
+                <label class="control-label">Archivo de Audio (WAV / FLAC / MP3)</label>
                 <input type="file" id="audio-file" class="input-box" accept=".wav,.flac,.mp3,audio/wav,audio/flac,audio/mpeg">
             </div>
 
+            <!-- Opciones Avanzadas de Mastering -->
+            <div class="section-title">Parámetros de Mastering</div>
+
+            <div class="grid-2">
+                <div class="control-group">
+                    <label class="control-label">Target Loudness (LUFS)</label>
+                    <input type="number" id="target-loudness" class="input-box" value="-14" step="0.5">
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Ceiling (dBFS)</label>
+                    <input type="number" id="ceiling" class="input-box" value="-1.0" step="0.1">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="control-group">
+                    <label class="control-label">Formato de Salida</label>
+                    <select id="output-format" class="input-box">
+                        <option value="wav">WAV (Original/Standard)</option>
+                        <option value="mp3">MP3 (320kbps)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">Algoritmo</label>
+                    <select id="algorithm" class="input-box">
+                        <option value="v2">V2 (Latest)</option>
+                        <option value="v1">V1</option>
+                    </select>
+                </div>
+            </div>
+
+            <label class="checkbox-group">
+                <input type="checkbox" id="preserve-bass" checked>
+                Preservar Bajos (Preserve Bass)
+            </label>
+
             <button class="btn-master" id="process-btn" onclick="initMastering()">
-                🚀 Iniciar Masterizado
+                🚀 Iniciar Masterizado Pro
             </button>
 
             <div id="status-console"></div>
@@ -303,6 +351,13 @@
             const fileInput = document.getElementById("audio-file");
             const btn = document.getElementById("process-btn");
 
+            // Obtener parámetros de la interfaz
+            const targetLoudness = parseFloat(document.getElementById("target-loudness").value);
+            const ceiling = parseFloat(document.getElementById("ceiling").value);
+            const outputFormat = document.getElementById("output-format").value;
+            const algorithm = document.getElementById("algorithm").value;
+            const preserveBass = document.getElementById("preserve-bass").checked;
+
             if (!token) {
                 alert("⚠️ Ingresa tu API Token para continuar.");
                 return;
@@ -315,16 +370,26 @@
             const file = fileInput.files[0];
             btn.disabled = true;
             resetConsole();
-            logMessage("Estableciendo enlace con el motor cloud...");
+            logMessage("Conectando con el servidor...");
 
             try {
-                // 1. Crear tarea
+                // 1. Crear tarea enviando los parámetros de configuración en el cuerpo JSON si la API los soporta
                 const createRes = await fetch(`${API_BASE}/masterings`, {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}` }
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        target_loudness: targetLoudness,
+                        ceiling: ceiling,
+                        output_format: outputFormat,
+                        algorithm: algorithm,
+                        preserve_bass: preserveBass
+                    })
                 });
 
-                if (!createRes.ok) throw new Error(`Error de autenticación o servidor (HTTP ${createRes.status})`);
+                if (!createRes.ok) throw new Error(`Error de autenticación o parámetros (HTTP ${createRes.status})`);
                 const createData = await createRes.json();
                 const masteringId = createData.id;
                 const uploadUrl = createData.upload_url;
@@ -338,8 +403,8 @@
                     body: file
                 });
 
-                if (!uploadRes.ok) throw new Error("Falló la subida del archivo al almacenamiento temporal.");
-                logMessage("Carga completada con éxito.");
+                if (!uploadRes.ok) throw new Error("Falló la subida del archivo al almacenamiento.");
+                logMessage("Archivo cargado correctamente.");
 
                 // 3. Activar procesamiento
                 logMessage("Enviando orden de procesamiento...");
@@ -355,7 +420,7 @@
                 if (!patchRes.ok) throw new Error("No se pudo activar el proceso de masterizado.");
 
                 // 4. Polling de estado
-                logMessage("Pista en cola de mastering...");
+                logMessage("Motor analizando y procesando pista...");
                 pollStatus(token, masteringId);
 
             } catch (error) {
@@ -373,18 +438,18 @@
                     if (!res.ok) throw new Error("Error consultando estado.");
                     const data = await res.json();
 
-                    logMessage(`Estado del motor: ${data.status}`);
+                    logMessage(`Estado: ${data.status}`);
 
                     if (data.status === 'finished') {
                         clearInterval(interval);
-                        logMessage("✨ ¡MASTERIZADO FINALIZADO!");
+                        logMessage("✨ ¡MASTERIZADO COMPLETADO!");
                         if (data.download_url) {
-                            logMessage(`📥 <a href="${data.download_url}" target="_blank" class="download-link">Descargar pista masterizada</a>`);
+                            logMessage(`📥 <a href="${data.download_url}" target="_blank" class="download-link">Descargar archivo masterizado</a>`);
                         }
                         document.getElementById("process-btn").disabled = false;
                     } else if (data.status === 'failed' || data.status === 'error') {
                         clearInterval(interval);
-                        logMessage("❌ El motor encontró un fallo procesando el audio.");
+                        logMessage("❌ El proceso falló en el servidor.");
                         document.getElementById("process-btn").disabled = false;
                     }
                 } catch (e) {
