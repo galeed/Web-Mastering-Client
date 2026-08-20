@@ -4,214 +4,280 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Mastering Pro App 🐱</title>
+    <!-- Tipografía moderna estilo editorial / portal musical -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* --- Estilo General (Dark Theme tipo Beatportal) --- */
         :root {
-            --bg-app: #121212;
-            --bg-card: #181818;
-            --text-primary: #e0e0e0;
-            --text-secondary: #a0a0a0;
-            --accent-color: #ff4081; /* Color vibrante tipo Beatport */
-            --accent-hover: #e91e63;
-            --border-color: #333;
-            --success-color: #00e676;
-            --error-color: #ef5350;
-            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --bg-base: #0a0b0e;
+            --surface: #13151b;
+            --surface-card: #181b22;
+            --border-subtle: #252a35;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-cyan: #00f2fe;
+            --accent-pink: #ff007f; /* Toque vibrante estilo club / música electrónica */
+            --success: #10b981;
+            --error: #ef4444;
         }
 
         body {
-            font-family: var(--font-family);
-            background-color: var(--bg-app);
-            color: var(--text-primary);
+            font-family: 'Plus Jakarta+Sans', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 24px;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.05) 0%, transparent 40%);
         }
 
-        /* --- Contenedor Principal (Tarjeta Única) --- */
-        .app-container {
-            background-color: var(--bg-card);
+        .portal-wrapper {
             width: 100%;
-            max-width: 550px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            max-width: 520px;
+            background: var(--surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
             overflow: hidden;
-            border: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
+            position: relative;
         }
 
-        /* --- Encabezado (Header) --- */
-        .app-header {
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--border-color);
+        /* Barra superior decorativa estilo portal */
+        .portal-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-cyan));
+        }
+
+        .portal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: space-between;
+            background: var(--surface-card);
         }
 
-        .app-logo {
-            font-size: 2.5rem; /* Tamaño del michi logo */
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            font-size: 2.2rem;
+            background: var(--surface);
+            padding: 8px;
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
             line-height: 1;
         }
 
-        .app-title {
-            font-size: 1.5rem;
+        .brand-title {
+            font-size: 1.25rem;
             font-weight: 800;
-            color: #fff;
             letter-spacing: -0.5px;
+            color: #fff;
             margin: 0;
         }
 
-        .app-subtitle {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            margin: 0;
+        .brand-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 2px 0 0 0;
+            font-weight: 600;
         }
 
-        /* --- Cuerpo del Panel (Pasos) --- */
-        .app-body {
-            padding: 25px;
+        .portal-badge {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--accent-cyan);
+            padding: 4px 8px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            text-transform: uppercase;
+        }
+
+        .portal-body {
+            padding: 28px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 22px;
         }
 
-        .step-group {
+        .control-group {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
 
-        .step-label {
-            font-weight: 600;
-            color: #fff;
-            font-size: 1rem;
+        .control-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
         }
 
-        /* --- Inputs y Botones --- */
-        input[type="text"], input[type="file"] {
+        .control-label span {
+            color: var(--accent-pink);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: none;
+        }
+
+        /* Inputs estilizados tipo consola */
+        .input-box {
             width: 100%;
-            padding: 12px;
-            background: #212121;
-            border: 1px solid var(--border-color);
+            padding: 14px 16px;
+            background: var(--bg-base);
+            border: 1px solid var(--border-subtle);
             color: #fff;
-            border-radius: 8px;
+            border-radius: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.95px;
             box-sizing: border-box;
-            font-family: var(--font-family);
-            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.1);
         }
 
         input[type="file"] {
-            padding: 8px;
+            color: var(--text-muted);
             cursor: pointer;
-            color: var(--text-secondary);
         }
 
-        .btn-action {
-            background-color: var(--accent-color);
+        input[type="file"]::file-selector-button {
+            background: var(--border-subtle);
             color: #fff;
             border: none;
-            padding: 16px;
-            font-size: 1.1rem;
+            padding: 8px 12px;
             border-radius: 8px;
             cursor: pointer;
+            font-weight: 600;
+            margin-right: 12px;
+            transition: background 0.2s;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: var(--accent-pink);
+        }
+
+        .btn-master {
+            background: linear-gradient(135deg, var(--accent-pink), #ff2a5f);
+            color: white;
+            border: none;
+            padding: 16px;
+            font-size: 1rem;
+            font-weight: 800;
+            border-radius: 12px;
+            cursor: pointer;
             width: 100%;
-            font-weight: 700;
-            transition: background-color 0.2s ease;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 10px;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 20px rgba(255, 0, 127, 0.3);
+            transition: all 0.2s ease;
+            margin-top: 6px;
         }
 
-        .btn-action:hover { background-color: var(--accent-hover); }
-        .btn-action:disabled { background-color: #555; cursor: not-allowed; color: #ccc; }
+        .btn-master:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(255, 0, 127, 0.5);
+        }
 
-        /* --- Área de Estado (Log) --- */
-        #status-box {
-            margin-top: 10px;
-            padding: 15px;
-            background: #121212;
-            border-radius: 8px;
-            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
+        .btn-master:disabled {
+            background: var(--border-subtle);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* Consola de estado */
+        #status-console {
+            background: var(--bg-base);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
             white-space: pre-wrap;
-            max-height: 150px;
+            max-height: 160px;
             overflow-y: auto;
-            display: none; /* Oculto por defecto */
-            border: 1px solid var(--border-color);
+            display: none;
         }
 
-        #status-box.visible {
+        #status-console.active {
             display: block;
         }
 
-        /* --- Toques Temáticos (Michis) --- */
-        .step-label::before {
-            content: '';
-            display: inline-block;
-            width: 24px;
-            height: 24px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            opacity: 0.7;
-        }
-
-        /* Íconos de michis para los pasos */
-        #step-token .step-label::before { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><path d="M32 4C16.54 4 4 16.54 4 32c0 8.41 3.62 15.97 9.4 21.18L12 60l10.82-4.9C26.36 56.64 29.1 57 32 57c15.46 0 28-12.54 28-28S47.46 4 32 4zm0 47c-2.53 0-4.97-.38-7.28-1.08l-6.29 2.85 1.3-6.56c-4.87-4.42-7.94-10.66-7.94-17.57 0-12.15 9.85-22 22-22s22 9.85 22 22-9.85 22-22 22z" fill="%23ff4081"/></svg>'); } /* Huella/Corazón */
-        #step-file .step-label::before { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 6h-8l-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 8h-3v3h-2v-3h-3v-2h3V9h2v3h3v2z" fill="%23ff4081"/></svg>'); } /* Carpeta */
-
         .download-link {
-            color: var(--success-color) !important;
+            color: var(--accent-cyan) !important;
             text-decoration: none;
             font-weight: bold;
         }
         .download-link:hover { text-decoration: underline; }
 
-        /* --- Responsive Design --- */
         @media (max-width: 480px) {
-            body { padding: 10px; }
-            .app-container { border-radius: 12px; }
-            .app-header { padding: 15px 20px; }
-            .app-body { padding: 20px; gap: 15px; }
-            .app-title { font-size: 1.3rem; }
-            .btn-action { padding: 14px; font-size: 1rem; }
+            body { padding: 12px; }
+            .portal-header { padding: 18px 20px; }
+            .portal-body { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <header class="app-header">
-            <div class="app-logo">🐱</div> <!-- Michi Logo -->
-            <div>
-                <h1 class="app-title">Mastering Pro App</h1>
-                <p class="app-subtitle">Tu estudio de masterizado en la nube</p>
+    <div class="portal-wrapper">
+        <header class="portal-header">
+            <div class="brand-container">
+                <div class="brand-logo">🐱</div>
+                <div>
+                    <h1 class="brand-title">Mastering Pro App</h1>
+                    <p class="brand-subtitle">Cloud Mastering Console</p>
+                </div>
             </div>
+            <div class="portal-badge">v1.0.0</div>
         </header>
 
-        <div class="app-body">
-            <div class="step-group" id="step-token">
-                <label class="step-label">Paso 1: Credenciales</label>
-                <input type="text" id="api-token" placeholder="Pega tu API Token de Bakuage aquí...">
+        <div class="portal-body">
+            <div class="control-group">
+                <label class="control-label">
+                    1. Credencial de Acceso <span>API Token</span>
+                </label>
+                <input type="text" id="api-token" class="input-box" placeholder="Pega tu token aquí...">
             </div>
 
-            <div class="step-group" id="step-file">
-                <label class="step-label">Paso 2: Subir Archivo</label>
-                <input type="file" id="audio-file" accept=".wav,.flac,.mp3,audio/wav,audio/flac,audio/mpeg">
+            <div class="control-group">
+                <label class="control-label">
+                    2. Archivo de Audio <span>WAV / FLAC / MP3</span>
+                </label>
+                <input type="file" id="audio-file" class="input-box" accept=".wav,.flac,.mp3,audio/wav,audio/flac,audio/mpeg">
             </div>
 
-            <button class="btn-action" id="process-btn" onclick="initMastering()">Iniciar Mastering</button>
+            <button class="btn-master" id="process-btn" onclick="initMastering()">
+                🚀 Iniciar Masterizado
+            </button>
 
-            <div id="status-box"></div>
+            <div id="status-console"></div>
         </div>
     </div>
 
@@ -219,17 +285,17 @@
         const API_BASE = "https://api.bakuage.com/api/v1";
 
         function logMessage(msg) {
-            const box = document.getElementById("status-box");
-            box.classList.add("visible");
-            const timestamp = new Date().toLocaleTimeString();
-            box.innerHTML += `[${timestamp}] ${msg}\n`;
-            box.scrollTop = box.scrollHeight;
+            const consoleBox = document.getElementById("status-console");
+            consoleBox.classList.add("active");
+            const time = new Date().toLocaleTimeString();
+            consoleBox.innerHTML += `[${time}] ${msg}\n`;
+            consoleBox.scrollTop = consoleBox.scrollHeight;
         }
 
-        function clearLog() {
-            const box = document.getElementById("status-box");
-            box.innerHTML = '';
-            box.classList.remove('visible');
+        function resetConsole() {
+            const consoleBox = document.getElementById("status-console");
+            consoleBox.innerHTML = '';
+            consoleBox.classList.remove('active');
         }
 
         async function initMastering() {
@@ -238,45 +304,45 @@
             const btn = document.getElementById("process-btn");
 
             if (!token) {
-                alert("⚠️ Por favor, introduce tu API Token de Bakuage.");
+                alert("⚠️ Ingresa tu API Token para continuar.");
                 return;
             }
             if (fileInput.files.length === 0) {
-                alert("⚠️ Por favor, selecciona un archivo de audio para masterizar.");
+                alert("⚠️ Selecciona una pista de audio.");
                 return;
             }
 
             const file = fileInput.files[0];
             btn.disabled = true;
-            clearLog();
-            logMessage("Iniciando proceso de masterizado...");
+            resetConsole();
+            logMessage("Estableciendo enlace con el motor cloud...");
 
             try {
                 // 1. Crear tarea
-                logMessage("Creando tarea en el servidor...");
                 const createRes = await fetch(`${API_BASE}/masterings`, {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
 
-                if (!createRes.ok) throw new Error(`Error al inicializar (HTTP ${createRes.status}): ${await createRes.text()}`);
+                if (!createRes.ok) throw new Error(`Error de autenticación o servidor (HTTP ${createRes.status})`);
                 const createData = await createRes.json();
                 const masteringId = createData.id;
                 const uploadUrl = createData.upload_url;
 
-                logMessage(`Tarea creada. ID: ${masteringId}`);
+                logMessage(`Sesión creada [ID: ${masteringId}]`);
 
-                // 2. Subir archivo
-                logMessage(`Subiendo archivo (${file.name})...`);
+                // 2. Subir archivo binario
+                logMessage(`Cargando archivo (${file.name})...`);
                 const uploadRes = await fetch(uploadUrl, {
                     method: 'PUT',
                     body: file
                 });
 
-                if (!uploadRes.ok) throw new Error("Fallo al subir el archivo de audio.");
-                logMessage("Archivo subido correctamente. Iniciando análisis...");
+                if (!uploadRes.ok) throw new Error("Falló la subida del archivo al almacenamiento temporal.");
+                logMessage("Carga completada con éxito.");
 
                 // 3. Activar procesamiento
+                logMessage("Enviando orden de procesamiento...");
                 const patchRes = await fetch(`${API_BASE}/masterings/${masteringId}`, {
                     method: 'PATCH',
                     headers: { 
@@ -286,11 +352,11 @@
                     body: JSON.stringify({ status: 'uploaded' })
                 });
 
-                if (!patchRes.ok) throw new Error("No se pudo activar el procesamiento en el servidor.");
+                if (!patchRes.ok) throw new Error("No se pudo activar el proceso de masterizado.");
 
-                // 4. Hacer Polling (monitorear estado)
-                logMessage("En cola de masterizado...");
-                pollMasteringStatus(token, masteringId);
+                // 4. Polling de estado
+                logMessage("Pista en cola de mastering...");
+                pollStatus(token, masteringId);
 
             } catch (error) {
                 logMessage(`❌ Error: ${error.message}`);
@@ -298,37 +364,35 @@
             }
         }
 
-        function pollMasteringStatus(token, masteringId) {
+        function pollStatus(token, masteringId) {
             const interval = setInterval(async () => {
                 try {
                     const res = await fetch(`${API_BASE}/masterings/${masteringId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
-                    if (!res.ok) throw new Error("Error al consultar estado.");
+                    if (!res.ok) throw new Error("Error consultando estado.");
                     const data = await res.json();
 
-                    logMessage(`Estado actual: ${data.status}`);
+                    logMessage(`Estado del motor: ${data.status}`);
 
                     if (data.status === 'finished') {
                         clearInterval(interval);
-                        logMessage("✅ ¡MASTERING COMPLETADO CON ÉXITO!");
+                        logMessage("✨ ¡MASTERIZADO FINALIZADO!");
                         if (data.download_url) {
-                            logMessage(`📥 <a href="${data.download_url}" target="_blank" class="download-link">Haz clic aquí para descargar tu pista masterizada</a>`);
+                            logMessage(`📥 <a href="${data.download_url}" target="_blank" class="download-link">Descargar pista masterizada</a>`);
                         }
                         document.getElementById("process-btn").disabled = false;
                     } else if (data.status === 'failed' || data.status === 'error') {
                         clearInterval(interval);
-                        logMessage("❌ El proceso de masterizado falló en el servidor.");
+                        logMessage("❌ El motor encontró un fallo procesando el audio.");
                         document.getElementById("process-btn").disabled = false;
                     }
-                    // Otros estados como 'pending', 'queued', 'processing' se ignoran y el polling continúa
-
                 } catch (e) {
                     clearInterval(interval);
-                    logMessage(`❌ Error durante el monitoreo: ${e.message}`);
+                    logMessage(`❌ Error de red: ${e.message}`);
                     document.getElementById("process-btn").disabled = false;
                 }
-            }, 7000); // Revisa el estado cada 7 segundos para no saturar la API
+            }, 6000);
         }
     </script>
 </body>
