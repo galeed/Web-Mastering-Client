@@ -477,33 +477,29 @@
 
                 <div class="credits-box">
                     Desarrollado de forma independiente y potenciado por la avanzada 
-                    <a href="https://bakuage.com/" target="_blank">API de Bakuage</a>. 
-                    Conoce más sobre sus servicios en <a href="https://bakuage.com/" target="_blank">bakuage.com</a>.
+                    <a href="https://aimastering.com/" target="_blank">API de AI Mastering</a>. 
+                    Conoce más sobre sus servicios en <a href="https://aimastering.com/" target="_blank">aimastering.com</a>.
                 </div>
 
                 <div class="section-title">Mini Tutorial de Extracción de Token</div>
                 <div class="tutorial-container">
                     <div class="tutorial-step">
                         <div class="tutorial-number">1</div>
-                        <span>Entra al sitio oficial de <a href="https://bakuage.com/" target="_blank" style="color:var(--accent-primary); font-weight:700;">Bakuage</a> y dirígete a la sección de <strong>Automated Mastering</strong>.</span>
+                        <span>Entra al sitio oficial de <a href="https://aimastering.com/" target="_blank" style="color:var(--accent-primary); font-weight:700;">AI Mastering</a> y dirígete a la sección de API.</span>
                     </div>
                     <div class="tutorial-step">
                         <div class="tutorial-number">2</div>
-                        <span>Ubica y haz clic en la opción de <strong>For Developer</strong> en el menú o panel.</span>
-                    </div>
-                    <div class="tutorial-step">
-                        <div class="tutorial-number">3</div>
-                        <span>Copia tu <strong>Access Token</strong> generado en automático (empieza con <strong>guest_</strong>), el cual luce de esta forma:<br>
+                        <span>Genera o copia tu <strong>Access Token</strong> (suele empezar con <strong>guest_</strong>), el cual luce de esta forma:<br>
                         <code class="token-example-tag">guest_ejemplodetokenpersonal123456789abcdef</code></span>
                     </div>
                     <div class="tutorial-step">
-                        <div class="tutorial-number">4</div>
+                        <div class="tutorial-number">3</div>
                         <span>Pégalo en la casilla inferior. La app lo guardará de forma segura en tu navegador para tus futuras sesiones.</span>
                     </div>
                 </div>
 
                 <div class="control-group" style="margin-top: 10px;">
-                    <label class="control-label">API Token de Bakuage (Acceso Personal)</label>
+                    <label class="control-label">API Token de AI Mastering (Acceso Personal)</label>
                     <input type="text" id="setup-token" class="input-box" placeholder="Ej. guest_ejemplodetokenpersonal123456789abcdef">
                 </div>
 
@@ -674,7 +670,8 @@
     </div>
 
     <script>
-        const API_BASE = "https://api.bakuage.com/api/v1";
+        // Actualizado al dominio raíz correcto de la API de AI Mastering
+        const API_BASE = "https://aimastering.com/api";
 
         window.addEventListener('DOMContentLoaded', () => {
             const savedToken = localStorage.getItem('bakuage_api_token');
@@ -689,7 +686,7 @@
             const token = tokenInput.value.trim();
 
             if (!token) {
-                alert("⚠️ Por favor, ingresa tu token de Bakuage para continuar.");
+                alert("⚠️ Por favor, ingresa tu token para continuar.");
                 return;
             }
 
@@ -802,9 +799,10 @@
             const file = fileInput.files[0];
             btn.disabled = true;
             resetConsole();
-            logMessage("Conectando con la API de Bakuage...");
+            logMessage("Conectando con la API de AI Mastering...");
 
             try {
+                // Se envía el token de forma compatible con la API (tanto en header como en parámetro si se requiere)
                 const createRes = await fetch(`${API_BASE}/masterings`, {
                     method: 'POST',
                     headers: { 
@@ -812,6 +810,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
+                        access_token: token,
                         target_loudness: targetLoudness,
                         true_peak: truePeak,
                         ceiling_mode: ceilingMode,
@@ -854,7 +853,7 @@
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ status: 'uploaded' })
+                    body: JSON.stringify({ access_token: token, status: 'uploaded' })
                 });
 
                 if (!patchRes.ok) throw new Error("No se pudo activar el proceso de masterizado en la API.");
@@ -888,7 +887,7 @@
                         document.getElementById("process-btn").disabled = false;
                     } else if (data.status === 'failed' || data.status === 'error') {
                         clearInterval(interval);
-                        logMessage("❌ El proceso falló en el servidor de Bakuage.");
+                        logMessage("❌ El proceso falló en el servidor.");
                         document.getElementById("process-btn").disabled = false;
                     }
                 } catch (e) {
