@@ -31,15 +31,19 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            overflow: hidden; /* Evita scrolls dobles en el body */
         }
 
         .portal-wrapper {
             width: 100%;
             max-width: 600px;
+            height: 85vh; /* Altura estática controlada */
             background: var(--surface);
             border: 1px solid var(--border-subtle);
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03); /* Sombra estática y sutil sin efectos flotantes */
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
             position: relative;
         }
@@ -53,12 +57,13 @@
         }
 
         .portal-header {
-            padding: 22px 28px;
+            padding: 20px 28px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: var(--surface);
+            flex-shrink: 0;
         }
 
         .brand-container {
@@ -109,8 +114,9 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            max-height: 80vh;
-            overflow-y: auto;
+            overflow-y: auto; /* Solo el contenido interno se desplaza */
+            flex-grow: 1;
+            scroll-behavior: smooth;
         }
 
         .section-title {
@@ -149,7 +155,7 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             font-size: 0.9rem;
             box-sizing: border-box;
-            transition: all 0.2s ease;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .input-box:focus, select:focus, textarea:focus {
@@ -221,7 +227,7 @@
             background: var(--accent-primary);
             cursor: pointer;
             border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
         }
 
         .stepper-box {
@@ -289,22 +295,18 @@
             width: 100%;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.3);
-            transition: all 0.2s ease;
+            transition: background 0.2s ease;
             margin-top: 10px;
         }
 
         .btn-master:hover {
             background: var(--accent-hover);
-            transform: translateY(-1px);
         }
 
         .btn-master:disabled {
             background: var(--border-subtle);
             color: var(--text-muted);
             cursor: not-allowed;
-            box-shadow: none;
-            transform: none;
         }
 
         #status-console {
@@ -334,6 +336,7 @@
 
         @media (max-width: 480px) {
             body { padding: 10px; }
+            .portal-wrapper { height: 95vh; }
             .portal-body { padding: 18px; }
         }
     </style>
@@ -474,7 +477,7 @@
                 <label class="control-label">Mastering Algorithm</label>
                 <div class="algo-tabs" style="display: flex; background: var(--surface-card); border: 1px solid var(--border-subtle); border-radius: 10px; padding: 4px; gap: 4px;">
                     <button type="button" class="algo-tab" id="tab-v1" onclick="setAlgorithm('v1')" style="flex:1; padding:10px; text-align:center; background:transparent; border:none; border-radius:8px; font-weight:700; font-size:0.85rem; color:var(--text-muted); cursor:pointer;">V1</button>
-                    <button type="button" class="algo-tab active" id="tab-v2" onclick="setAlgorithm('v2')" style="flex:1; padding:10px; text-align:center; background:var(--accent-primary); color:white; border:none; border-radius:8px; font-weight:700; font-size:0.85rem; cursor:pointer; box-shadow: 0 2px 8px rgba(2, 132, 199, 0.25);">V2 (Latest)</button>
+                    <button type="button" class="algo-tab active" id="tab-v2" onclick="setAlgorithm('v2')" style="flex:1; padding:10px; text-align:center; background:var(--accent-primary); color:white; border:none; border-radius:8px; font-weight:700; font-size:0.85rem; cursor:pointer;">V2 (Latest)</button>
                 </div>
                 <input type="hidden" id="algorithm" value="v2">
             </div>
@@ -511,7 +514,6 @@
     </div>
 
     <script>
-        // Endpoint oficial de la API de Bakuage (según especificación OpenAPI)
         const API_BASE = "https://api.bakuage.com/api/v1";
 
         function setAlgorithm(algo) {
@@ -609,7 +611,6 @@
             logMessage("Conectando con la API de Bakuage...");
 
             try {
-                // 1. Crear el recurso de masterizado (POST /masterings)
                 const createRes = await fetch(`${API_BASE}/masterings`, {
                     method: 'POST',
                     headers: { 
@@ -643,7 +644,6 @@
 
                 logMessage(`Sesión creada exitosamente [ID: ${masteringId}]`);
 
-                // 2. Subir el archivo de audio directamente a la URL presignada provista por la API (PUT)
                 logMessage(`Subiendo archivo de audio (${file.name})...`);
                 const uploadRes = await fetch(uploadUrl, {
                     method: 'PUT',
@@ -653,7 +653,6 @@
                 if (!uploadRes.ok) throw new Error("Falló la subida del archivo al almacenamiento de la API.");
                 logMessage("Archivo cargado correctamente en el servidor.");
 
-                // 3. Notificar que la subida finalizó cambiando el estado a 'uploaded' (PATCH /masterings/{id})
                 logMessage("Enviando orden de inicio de procesamiento...");
                 const patchRes = await fetch(`${API_BASE}/masterings/${masteringId}`, {
                     method: 'PATCH',
@@ -675,7 +674,6 @@
             }
         }
 
-        // 4. Polling periódico del estado de la tarea (GET /masterings/{id})
         function pollStatus(token, masteringId) {
             const interval = setInterval(async () => {
                 try {
