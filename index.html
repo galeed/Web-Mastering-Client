@@ -7,8 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --surface: rgba(255, 255, 255, 0.85); /* Opaco/translúcido para ver el fondo */
-            --surface-card: rgba(248, 250, 252, 0.75);
+            --surface: rgba(255, 255, 255, 0.92); /* Más claro y luminoso */
+            --surface-card: rgba(248, 250, 252, 0.85);
             --border-subtle: #cbd5e1;
             --text-main: #0f172a;
             --text-muted: #475569;
@@ -17,12 +17,11 @@
             --accent-pink: #ec4899;
         }
 
-        /* Página fluida y estática, permitiendo scroll natural */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-color: #ffffff;
-            /* Patrón de pentagramas y notas musicales inspirado en tu imagen */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cg fill='%2364748b' fill-opacity='0.15'%3E%3Cpath d='M0,40 Q75,20 150,50 T300,30 M0,50 Q75,30 150,60 T300,40 M0,60 Q75,40 150,70 T300,50 M0,70 Q75,50 150,80 T300,60 M0,80 Q75,60 150,90 T300,70' stroke='%2364748b' stroke-width='0.8' fill='none' stroke-opacity='0.2'/%3E%3Cpath d='M0,190 Q75,170 150,200 T300,180 M0,200 Q75,180 150,210 T300,190 M0,210 Q75,190 150,220 T300,200 M0,220 Q75,200 150,230 T300,210 M0,230 Q75,210 150,240 T300,220' stroke='%2364748b' stroke-width='0.8' fill='none' stroke-opacity='0.2'/%3E%3Ccircle cx='70' cy='45' r='3.5'/%3E%3Cpath d='M73,45 L73,25 L80,27 L80,47' fill='%2364748b'/%3E%3Ccircle cx='200' cy='65' r='3.5'/%3E%3Cpath d='M203,65 L203,45 L210,47 L210,67' fill='%2364748b'/%3E%3Ccircle cx='110' cy='205' r='3.5'/%3E%3Ccircle cx='130' cy='215' r='3.5'/%3E%3C/g%3E%3C/svg%3E");
+            /* Pentagramas y notas con un tono más oscuro tipo tinta negra */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300'%3E%3Cg fill='%231e293b' fill-opacity='0.35'%3E%3Cpath d='M0,40 Q75,20 150,50 T300,30 M0,50 Q75,30 150,60 T300,40 M0,60 Q75,40 150,70 T300,50 M0,70 Q75,50 150,80 T300,60 M0,80 Q75,60 150,90 T300,70' stroke='%231e293b' stroke-width='0.9' fill='none' stroke-opacity='0.4'/%3E%3Cpath d='M0,190 Q75,170 150,200 T300,180 M0,200 Q75,180 150,210 T300,190 M0,210 Q75,190 150,220 T300,200 M0,220 Q75,200 150,230 T300,210 M0,230 Q75,210 150,240 T300,220' stroke='%231e293b' stroke-width='0.9' fill='none' stroke-opacity='0.4'/%3E%3Ccircle cx='70' cy='45' r='4'/%3E%3Cpath d='M73,45 L73,23 L81,25 L81,47' fill='%231e293b'/%3E%3Ccircle cx='200' cy='65' r='4'/%3E%3Cpath d='M203,65 L203,43 L211,45 L211,67' fill='%231e293b'/%3E%3Ccircle cx='110' cy='205' r='4'/%3E%3Ccircle cx='130' cy='215' r='4'/%3E%3C/g%3E%3C/svg%3E");
             background-repeat: repeat;
             color: var(--text-main);
             margin: 0;
@@ -31,13 +30,12 @@
             box-sizing: border-box;
         }
 
-        /* Cuadro estático que se mueve con el scroll de la página */
         .portal-wrapper {
             max-width: 600px;
-            margin: 0 auto; /* Centrado pero estático en el flujo */
+            margin: 0 auto;
             background: var(--surface);
-            backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border: 1px solid var(--border-subtle);
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
@@ -62,7 +60,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.8);
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
         }
