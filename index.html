@@ -285,7 +285,7 @@
                 <input type="file" id="audio-file" class="input-box" accept=".wav,.flac,.mp3,audio/wav,audio/flac,audio/mpeg">
             </div>
 
-            <!-- Opciones Avanzadas de Mastering -->
+            <!-- Parámetros de Limitador / Ceiling -->
             <div class="section-title">Parámetros de Mastering</div>
 
             <div class="grid-2">
@@ -299,7 +299,29 @@
                 </div>
             </div>
 
-            <div class="grid-2">
+            <div class="control-group">
+                <label class="control-label">Ceiling Mode</label>
+                <select id="ceiling-mode" class="input-box">
+                    <option value="true_peak">True Peak</option>
+                    <option value="true_peak_lowpass">True Peak (15kHz Lowpass)</option>
+                    <option value="peak">Peak (Standard)</option>
+                </select>
+            </div>
+
+            <!-- Automatic Mastering (Añadido según la captura) -->
+            <div class="section-title" style="margin-top: 10px;">Automatic Mastering</div>
+
+            <label class="checkbox-group">
+                <input type="checkbox" id="auto-mastering-enabled" checked>
+                Automatic Mastering Enabled
+            </label>
+
+            <div class="control-group" style="margin-top: 6px;">
+                <label class="control-label">Mastering Level Intensity</label>
+                <input type="number" id="auto-mastering-level" class="input-box" value="1.0" min="0" max="5" step="0.1">
+            </div>
+
+            <div class="grid-2" style="margin-top: 6px;">
                 <div class="control-group">
                     <label class="control-label">Formato de Salida</label>
                     <select id="output-format" class="input-box">
@@ -351,9 +373,12 @@
             const fileInput = document.getElementById("audio-file");
             const btn = document.getElementById("process-btn");
 
-            // Obtener parámetros actualizados
+            // Recopilar todos los parámetros, incluyendo Automatic Mastering
             const targetLoudness = parseFloat(document.getElementById("target-loudness").value);
             const truePeak = parseFloat(document.getElementById("true-peak").value);
+            const ceilingMode = document.getElementById("ceiling-mode").value;
+            const autoMasteringEnabled = document.getElementById("auto-mastering-enabled").checked;
+            const autoMasteringLevel = parseFloat(document.getElementById("auto-mastering-level").value);
             const outputFormat = document.getElementById("output-format").value;
             const algorithm = document.getElementById("algorithm").value;
             const preserveBass = document.getElementById("preserve-bass").checked;
@@ -373,7 +398,7 @@
             logMessage("Conectando con el servidor...");
 
             try {
-                // 1. Crear tarea enviando los parámetros (incluyendo true_peak)
+                // 1. Crear tarea enviando el bloque completo a la API
                 const createRes = await fetch(`${API_BASE}/masterings`, {
                     method: 'POST',
                     headers: { 
@@ -383,6 +408,9 @@
                     body: JSON.stringify({
                         target_loudness: targetLoudness,
                         true_peak: truePeak,
+                        ceiling_mode: ceilingMode,
+                        automatic_mastering_enabled: autoMasteringEnabled,
+                        automatic_mastering_level: autoMasteringLevel,
                         output_format: outputFormat,
                         algorithm: algorithm,
                         preserve_bass: preserveBass
