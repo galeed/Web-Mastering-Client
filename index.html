@@ -198,6 +198,17 @@
             color: var(--text-main);
         }
 
+        .token-example-tag {
+            display: inline-block;
+            background: #0f172a;
+            color: #38bdf8;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+
         /* Utilidades generales */
         .section-title {
             font-size: 0.9rem;
@@ -475,21 +486,22 @@
                 <div class="tutorial-container">
                     <div class="tutorial-step">
                         <div class="tutorial-number">1</div>
-                        <span><strong>Obtén tu token:</strong> Entra a <a href="https://bakuage.com/" target="_blank" style="color:var(--accent-primary); font-weight:700;">Bakuage</a>, inicia sesión en tu cuenta de desarrollador y genera o copia tu API Token.</span>
+                        <span><strong>Obtén tu token:</strong> Entra a <a href="https://bakuage.com/" target="_blank" style="color:var(--accent-primary); font-weight:700;">Bakuage</a>, inicia sesión en tu cuenta de desarrollador y genera o copia tu clave API.</span>
                     </div>
                     <div class="tutorial-step">
                         <div class="tutorial-number">2</div>
-                        <span><strong>Pégalo aquí:</strong> Ingresa el token en la casilla de abajo. La app lo recordará automáticamente en este navegador para que nunca más tengas que teclearlo.</span>
+                        <span><strong>Identifica el formato:</strong> El token suele verse como una cadena larga de letras y números similar a esto:<br>
+                        <code class="token-example-tag">bkg_live_abc123xyz789tokenfalsoejemplo</code></span>
                     </div>
                     <div class="tutorial-step">
                         <div class="tutorial-number">3</div>
-                        <span><strong>Masteriza:</strong> Sube tu archivo de audio, ajusta los parámetros a tu gusto y deja que la inteligencia artificial haga el resto.</span>
+                        <span><strong>Pégalo y masteriza:</strong> Ingresa el token en la casilla inferior. La app lo guardará de forma segura en tu navegador para recordar tus futuras sesiones.</span>
                     </div>
                 </div>
 
                 <div class="control-group" style="margin-top: 10px;">
                     <label class="control-label">API Token de Bakuage (Acceso Personal)</label>
-                    <input type="text" id="setup-token" class="input-box" placeholder="Pega tu token aquí (ej. bkg_sec_...)">
+                    <input type="text" id="setup-token" class="input-box" placeholder="Ej. bkg_live_abc123xyz789tokenfalsoejemplo">
                 </div>
 
                 <button class="btn-action" onclick="saveTokenAndProceed()">
@@ -497,7 +509,7 @@
                 </button>
             </div>
 
-            <!-- VISTA 2: PANEL DE MASTERING (Opciones estructuradas) -->
+            <!-- VISTA 2: PANEL DE MASTERING -->
             <div id="view-mastering" class="hidden" style="display: flex; flex-direction: column; gap: 20px;">
                 
                 <div style="display: flex; justify-content: space-between; align-items: center; background: var(--surface-card); padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-subtle);">
@@ -661,11 +673,9 @@
     <script>
         const API_BASE = "https://api.bakuage.com/api/v1";
 
-        // Comprobar si ya existe un token guardado al cargar la página
         window.addEventListener('DOMContentLoaded', () => {
             const savedToken = localStorage.getItem('bakuage_api_token');
             if (savedToken) {
-                // Si ya hay token, saltar directo al panel de control
                 document.getElementById('setup-token').value = savedToken;
                 showMasteringView();
             }
@@ -680,7 +690,6 @@
                 return;
             }
 
-            // Guardar en memoria local del navegador
             localStorage.setItem('bakuage_api_token', token);
             showMasteringView();
         }
@@ -859,7 +868,7 @@
         function pollStatus(token, masteringId) {
             const interval = setInterval(async () => {
                 try {
-                    const res = await fetch(`${API_BASE}/masterings/${masteringId}`, {
+                    const res = __await_or_fetch = await fetch(`${API_BASE}/masterings/${masteringId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (!res.ok) throw new Error("Error consultando el estado del proceso.");
