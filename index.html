@@ -285,7 +285,7 @@
                 <input type="file" id="audio-file" class="input-box" accept=".wav,.flac,.mp3,audio/wav,audio/flac,audio/mpeg">
             </div>
 
-            <!-- Parámetros de Limitador / Ceiling -->
+            <!-- Parámetros de Limiter / Ceiling -->
             <div class="section-title">Parámetros de Mastering</div>
 
             <div class="grid-2">
@@ -308,7 +308,7 @@
                 </select>
             </div>
 
-            <!-- Automatic Mastering (Añadido según la captura) -->
+            <!-- Automatic Mastering -->
             <div class="section-title" style="margin-top: 10px;">Automatic Mastering</div>
 
             <label class="checkbox-group">
@@ -321,14 +321,30 @@
                 <input type="number" id="auto-mastering-level" class="input-box" value="1.0" min="0" max="5" step="0.1">
             </div>
 
-            <div class="grid-2" style="margin-top: 6px;">
+            <!-- Output Format & Sampling Rate Actualizados -->
+            <div class="section-title" style="margin-top: 10px;">Formatos y Calidad de Salida</div>
+
+            <div class="grid-2">
                 <div class="control-group">
-                    <label class="control-label">Formato de Salida</label>
+                    <label class="control-label">Output Format</label>
                     <select id="output-format" class="input-box">
-                        <option value="wav">WAV (Original/Standard)</option>
-                        <option value="mp3">MP3 (320kbps)</option>
+                        <option value="wav_16">WAV (16bit)</option>
+                        <option value="wav_24" selected>WAV (24bit)</option>
+                        <option value="wav_32float">WAV (32bit Float)</option>
+                        <option value="mp3_320">MP3 (320kbps)</option>
                     </select>
                 </div>
+                <div class="control-group">
+                    <label class="control-label">Sampling Rate</label>
+                    <select id="sampling-rate" class="input-box">
+                        <option value="original" selected>Same As Original</option>
+                        <option value="44100">44.1 kHz</option>
+                        <option value="48000">48 kHz</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-top: 6px;">
                 <div class="control-group">
                     <label class="control-label">Algoritmo</label>
                     <select id="algorithm" class="input-box">
@@ -336,12 +352,13 @@
                         <option value="v1">V1</option>
                     </select>
                 </div>
+                <div class="control-group" style="justify-content: flex-end; display: flex; align-items: center;">
+                    <label class="checkbox-group" style="margin-top: 20px;">
+                        <input type="checkbox" id="preserve-bass" checked>
+                        Preservar Bajos
+                    </label>
+                </div>
             </div>
-
-            <label class="checkbox-group">
-                <input type="checkbox" id="preserve-bass" checked>
-                Preservar Bajos (Preserve Bass)
-            </label>
 
             <button class="btn-master" id="process-btn" onclick="initMastering()">
                 🚀 Iniciar Masterizado Pro
@@ -373,13 +390,14 @@
             const fileInput = document.getElementById("audio-file");
             const btn = document.getElementById("process-btn");
 
-            // Recopilar todos los parámetros, incluyendo Automatic Mastering
+            // Recopilar parámetros incluyendo formato detallado y sample rate
             const targetLoudness = parseFloat(document.getElementById("target-loudness").value);
             const truePeak = parseFloat(document.getElementById("true-peak").value);
             const ceilingMode = document.getElementById("ceiling-mode").value;
             const autoMasteringEnabled = document.getElementById("auto-mastering-enabled").checked;
             const autoMasteringLevel = parseFloat(document.getElementById("auto-mastering-level").value);
             const outputFormat = document.getElementById("output-format").value;
+            const samplingRate = document.getElementById("sampling-rate").value;
             const algorithm = document.getElementById("algorithm").value;
             const preserveBass = document.getElementById("preserve-bass").checked;
 
@@ -398,7 +416,7 @@
             logMessage("Conectando con el servidor...");
 
             try {
-                // 1. Crear tarea enviando el bloque completo a la API
+                // 1. Crear tarea enviando los parámetros completos
                 const createRes = await fetch(`${API_BASE}/masterings`, {
                     method: 'POST',
                     headers: { 
@@ -412,6 +430,7 @@
                         automatic_mastering_enabled: autoMasteringEnabled,
                         automatic_mastering_level: autoMasteringLevel,
                         output_format: outputFormat,
+                        sampling_rate: samplingRate,
                         algorithm: algorithm,
                         preserve_bass: preserveBass
                     })
